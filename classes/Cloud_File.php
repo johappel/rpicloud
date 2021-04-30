@@ -1,6 +1,8 @@
 <?php
 
 
+use function Sabre\HTTP\decodePath;
+
 class Cloud_File {
 
 	public $_name;
@@ -17,7 +19,7 @@ class Cloud_File {
 	}
 
 	public function get_name(){
-		return \Sabre\HTTP\decodePath($this->_name);
+		return decodePath($this->_name);
 	}
 
 	public function get_type(){

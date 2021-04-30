@@ -4,19 +4,13 @@
 class Cloud_Helper {
 
 
-	static function display_tree($counter=1,$tree_id='tree1', $tree_content){
-
-		$html = '<div id="'.$tree_id.'" class="tree">';
-		$html .= $tree_content;
-		$html .= '</div>';
-		return $html ;
-    }
-
 	static function get_activity_html(stdClass $event){
 
 		$pattern = '%s hat die Datei <a href="%s">%s</a> im Ordner <a href="%s">%s</a> am %s hochgeladen';
 
 		$html = sprintf ($pattern, $event->username,$event->fileurl,$event->filename,$event->origin, $event->uploaddir ,$event->date);
+
+		$html = apply_filters('rpi-cloud-activity', $html,$event );
 
 		return $html;
 	}

@@ -1,6 +1,8 @@
 <?php
 
 
+use Sabre\DAV\Client;
+
 class Cloud_Config {
 
 	protected $transkey;
@@ -144,7 +146,7 @@ class Cloud_Config {
 	}
 
 	public function get_client(){
-		return new \Sabre\DAV\Client($this->client_settings());
+		return new Client($this->client_settings());
 	}
 	protected function restore_from_options($key){
 

@@ -1,6 +1,8 @@
 <?php
 
 
+use function Sabre\HTTP\encodePath;
+
 class Cloud_Download {
 	public static function display(){
 
@@ -12,7 +14,7 @@ class Cloud_Download {
 
 		$file =  $cfg->get_uriPrefix().urldecode($_GET['file']);
 
-		$file = \Sabre\HTTP\encodePath($file);
+		$file = encodePath($file);
 
 		# load file
 		$response = $client->request('GET', $file);

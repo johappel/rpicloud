@@ -1,6 +1,8 @@
 <?php
 
 
+use function Sabre\HTTP\decodePath;
+
 class Cloud_Directory {
 
 	public $_name = '';
@@ -17,7 +19,7 @@ class Cloud_Directory {
 	}
 
 	public function get_name(){
-		return \Sabre\HTTP\decodePath($this->_name);
+		return decodePath($this->_name);
 	}
 
 	public function create_dir($dir)

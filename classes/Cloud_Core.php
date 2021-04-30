@@ -9,6 +9,7 @@ Class Cloud_Core{
 
 	static function init(){
 
+
 		//oembedder
 		wp_oembed_add_provider('https://cloud.rpi-virtuell.de/index.php/s/*', Cloud_Core::$pluginurl .'oembed.php', false);
 
@@ -28,6 +29,42 @@ Class Cloud_Core{
 		$rel_pluginurl =substr(str_replace(home_url(),'',self::$pluginurl),1);
 		add_rewrite_rule( '^cloud/([^/]*)/(.*)$', $rel_pluginurl.'download.php?key=$1&file=$2', 'bottom' );
 		add_rewrite_rule( '^cloudview/([^/]*)$', $rel_pluginurl.'viewer.php?url=$1', 'bottom' );
+
+		//rpicloud page generieren
+		$args = array(
+			'name'   => 'rpicloud',
+			'post_type'   => 'page',
+			'numberposts' => 1
+		);
+		$pages = get_posts($args);
+		if($pages){
+			$page = $pages[0];
+			if($page->post_status != 'publish' ) {
+
+				wp_update_post( array(
+					'ID'          => $page->ID,
+					'post_status' => 'publish'
+				) );
+
+			}elseif ($page->page_template != 'embed_tree.php'){
+
+				update_post_meta( $page->ID, '_wp_page_template', 'embed_tree.php' );
+
+			}
+		}else{
+			$args = array(
+				'post_name'   => 'rpicloud',
+				'post_type'   => 'page',
+				'post_title'   => 'rpi-cloud (Seite zum automatischen Einbetten von nextcloud-ordnern)',
+				'post_status'   => 'publish',
+				'page_template'   => 'embed_tree.php',
+			);
+			$feedback = wp_insert_post($args);
+			if(intval($feedback)>0){
+				flush_rewrite_rules(true );
+			}
+
+		}
 
 
 	}
@@ -80,14 +117,14 @@ Class Cloud_Core{
 		}else{
 			$start_dir = '/';
 		}
-
-		$tree_content = $client->get_folder_tree($start_dir);
-
-
-		$html = Cloud_Helper::display_tree($post->nc, $tree_id, $tree_content);
+		$html  = '<div class="rpicloud">';
+		$html .= '<div id="'.$tree_id.'" class="tree">';
+		$html .= $client->get_folder_tree($start_dir);
+		$html .= '</div>';
 
 		if($atts['upload'] == 'true'){
-			$form = Cloud_Upload::display_form(array(
+
+			$html .= Cloud_Upload::display_form(array(
 				'key'=> $option_key,
 				'dir'=> $start_dir,
 				'prefix'=>$tree_id,
@@ -95,11 +132,13 @@ Class Cloud_Core{
 				'folder-label'=> $txt_folder,
 				'folder-placeholder'=> $txt_placeholder
 			));
-		}else{
-			$form = '';
 		}
 
-		return $html.$form;
+		$html .= '<a class="cloud_del" data="'.$tree_id.'">x</a>';
+		$html .= '</div>';
+
+
+		return $html;
 	}
 
 	static function rpicloud_frame($url, $pass='')
@@ -153,5 +192,10 @@ Class Cloud_Core{
 		return $key;
 	}
 
+	static function getTemplate_dir(){
+
+		return dirname(__DIR__).'/templates/';
+
+	}
 
 }

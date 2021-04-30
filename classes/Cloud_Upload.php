@@ -1,6 +1,8 @@
 <?php
 
 
+use function Sabre\HTTP\encodePath;
+
 class Cloud_Upload {
 
 
@@ -28,9 +30,10 @@ class Cloud_Upload {
 
 		if( $notallowed === false ) {
 
-			$html = '<div class="cloud_upload"><details>';
+			$html = '<div class="cloud_upload">';
 
 
+			$html .= '<details>';
 			$html .= '<summary>' . $txt_header . '</summary>';
 			$html .= '<form class="wpcfu-form" method="POST" enctype="multipart/form-data">';
 
@@ -90,10 +93,11 @@ class Cloud_Upload {
 			$html .= wp_nonce_field( 'upload_wpcfu_file', 'wpcfu_nonce', true, false );
 			$html .= '<input type="hidden" name="action" value="wp_handle_upload">';
 
-			$html .= '</form>';
-			$html .= '</details></div>';
 
 		}
+		$html .= '</form>';
+		$html .= '</details>';
+		$html .= '</div>';
 
 		return $html;
 
@@ -169,7 +173,7 @@ class Cloud_Upload {
 			$curl = curl_init();
 
 			curl_setopt_array($curl, [
-				CURLOPT_URL => $cfg->get_baseUri() . \Sabre\HTTP\encodePath($uploaddir.$create_dir),
+				CURLOPT_URL => $cfg->get_baseUri() . encodePath($uploaddir.$create_dir),
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_ENCODING => "",
 				CURLOPT_MAXREDIRS => 10,
@@ -201,7 +205,7 @@ class Cloud_Upload {
 		$curl = curl_init();
 
 		curl_setopt_array($curl, [
-			CURLOPT_URL => $cfg->get_baseUri() . \Sabre\HTTP\encodePath($uploaddir .$_FILES['wpcfu_file']['name']),
+			CURLOPT_URL => $cfg->get_baseUri() . encodePath($uploaddir .$_FILES['wpcfu_file']['name']),
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => "",
 			CURLOPT_MAXREDIRS => 10,
@@ -232,7 +236,7 @@ class Cloud_Upload {
 		$event = new stdClass();
 		$event->filename = $_FILES['wpcfu_file']['name'];
 		$event->uploaddir = $uploaddir;
-		$event->fileurl = Cloud_Core::$pluginurl . $cfg->get_transkey() .\Sabre\HTTP\encodePath($uploaddir .$_FILES['wpcfu_file']['name']);
+		$event->fileurl = Cloud_Core::$pluginurl . $cfg->get_transkey() . encodePath( $uploaddir . $_FILES['wpcfu_file']['name']);
 		$event->username = $_POST['form_user'];
 		$event->date = date("j.n.Y H:i");
 		$event->origin = get_permalink($_POST['id']).$_POST['nodekey'];

@@ -1,9 +1,31 @@
+span.fancytree-title a {
+    text-decoration: none;
+    color: #444444;
+}
+.fancytree-folder span.fancytree-title{
+    font-weight: bold;
+    font-family: sans-serif;
+    color: #444;
+}
+span.fancytree-title a:visited{
+    color: #444444;
+}
+
+ul.fancytree-container,.cloud_upload{
+    background-color: transparent;
+    border: 0;
+
+}
+.rpicloud{
+    background-color: #ffffff;
+    padding: 10px 0 0 0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
 .cloud_upload{
-    border-radius: 0;
-    border: 2px dotted #c0c0c0;
-    background-color: #fff;
-    padding: 10px 20px;
-    margin-top: 20px;
+    border-top: 1px solid #ddd;
+    padding: 5px 20px;
+    background-color: #efefef;
 }
 input[type="text"].cloud-upload-dir {
     border: 1px solid #ccc;
@@ -21,7 +43,30 @@ input[type="text"].cloud-upload-dir {
 .cloud-upload-file input{
     margin-right: 20px;
     float: left;
+    font-size: 14px;
 }
+details summary{
+    font-size: 13px;
+}
+a.cloud_del {
+    float: right;
+    color: red;
+    width: 26px;
+    height: 28px;
+    overflow: hidden;
+    text-align: right;
+    border: 1px solid #c0c0c0;
+    padding: 0 8px 5px 0;
+    margin-top: -30px;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-right: 3px;
+}
+a.cloud_del:hover {
+    background-color: #3875d7;
+    color: #fff;
+}
+/*
 details[open] summary ~ * {
     animation: sweep 1.5s ease-in-out;
 }
@@ -29,3 +74,4 @@ details[open] summary ~ * {
     0%    {opacity: 0; margin-left: -10px}
     100%  {opacity: 1; margin-left: 0px}
 }
+*/
