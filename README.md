@@ -3,6 +3,10 @@
 
 Wordpress Plugin which connects to a public NextCloud (DAV) share and provides a list with files to download from, without showing the user the NextCloud Interface.
 
+### Screenshot
+![grafik](https://user-images.githubusercontent.com/307023/116627108-cef98600-a94c-11eb-8657-819e18fd3db3.png)
+
+
 ### Installation
 
 1. Clone the plugin on your server (in the `/wp-content/plugins/` directory).
