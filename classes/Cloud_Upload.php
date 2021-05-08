@@ -67,13 +67,13 @@ class Cloud_Upload {
 
 			$html .= '<div id="upload_'.$tree_id.'_container" class="cloud_upload"><div class="rpicloud-wrapper">';
 
-			$html .= '<form class="wpcfu-form" method="POST" enctype="multipart/form-data" class="cloud_upload" onsubmit="return rpicloud.checkupload(\''.$tree_id.'\');">';
+			$html .= '<form class="rpicld-form" method="POST" enctype="multipart/form-data" class="cloud_upload" onsubmit="return rpicloud.checkupload(\''.$tree_id.'\');">';
 
 			//Fileupload
 			$html .= '<p class="form-field" id="cloud-upload-field-'.$tree_id.'">';
 			$html .= '<label for="cloud-upload-file-'.$tree_id.'" class="cloud-upload-file">';
 			$html .= '<span class="cloud-upload-label">Datei wählen</span>';
-			$html .= '<input type="file" id="cloud-upload-file-'.$tree_id.'" size="60" name="wpcfu_file" onchange="this.parentNode.parentElement.style.border=\'none\'">';
+			$html .= '<input type="file" id="cloud-upload-file-'.$tree_id.'" size="60" name="rpicld_file" onchange="this.parentNode.parentElement.style.border=\'none\'">';
 			$html .= '</label>';
 			$html .= '</p>';
 
@@ -88,7 +88,7 @@ class Cloud_Upload {
 
 			//submit
 			$html .= '<p class="form-field">';
-			$html .=    '<input type="submit" name="submit_wpcfu_form" class="button button-primary" value="' . esc_html__( 'Upload' ) . '">';
+			$html .=    '<input type="submit" name="submit_rpicld_form" class="button button-primary" value="' . esc_html__( 'Upload' ) . '">';
 			$html .= '</p>';
 
 
@@ -97,7 +97,7 @@ class Cloud_Upload {
 
 		//hidden fields
 		$html .= '<input type="hidden" id="' . $tree_id . '-cloud-upload-dir" name="dir" value="">';
-		$html .= '<input type="hidden" id="' . $tree_id . '-cloud-upload-nodekey" name="nodekey" value="_0">';
+		$html .= '<input type="hidden" id="' . $tree_id . '-cloud-upload-nodekey" name="nodekey" value="">';
 		$html .= '<input type="hidden" name="tree_id" value="'.$tree_id.'">';
 		$html .= '<input id="' . $tree_id . '-cloud-upload-startdir" type="hidden" name="startdir" value="'. $atts['dir'] .'">';
 		$html .= '<input type="hidden"  class="cloud-username" name="form_user" value="">';
@@ -107,7 +107,7 @@ class Cloud_Upload {
 		$html .= '<input type="hidden" name="rpicloud_key" value="'. $atts['key'] .'">';
 		$html .= '<input type="hidden" name="id" value="' . get_the_ID() . '">';
 		// Output the nonce field
-		$html .= wp_nonce_field( 'upload_wpcfu_file', 'wpcfu_nonce', true, false );
+		$html .= wp_nonce_field( 'upload_rpicld_file', 'rpicld_nonce', true, false );
 		$html .= '<input type="hidden" name="action" value="wp_handle_upload">';
 
 
@@ -121,25 +121,25 @@ class Cloud_Upload {
 
 	static function handle_file_upload() {
 		// Stop immidiately if form is not submitted
-		if ( ! isset( $_POST['submit_wpcfu_form'] ) ) {
+		if ( ! isset( $_POST['submit_rpicld_form'] ) ) {
 			return;
 		}
 		if ( ! isset( $_POST['rpicloud_key'] ) ) {
 			wp_die( esc_html__( 'Transient Key missing', 'theme-text-domain' ) );
 		}
 		// Verify nonce
-		if ( ! wp_verify_nonce( $_POST['wpcfu_nonce'], 'upload_wpcfu_file' ) ) {
+		if ( ! wp_verify_nonce( $_POST['rpicld_nonce'], 'upload_rpicld_file' ) ) {
 			wp_die( esc_html__( 'Nonce mismatched', 'theme-text-domain' ) );
 		}
 
 		// Throws a message if no file is selected
-		if ( ! $_FILES['wpcfu_file']['name'] ) {
+		if ( ! $_FILES['rpicld_file']['name'] ) {
 			wp_die( esc_html__( 'Please choose a file', 'theme-text-domain' ) );
 		}
 
 		$username = Cloud_Helper::get_username('Anonymous');
 
-		$file_size = $_FILES['wpcfu_file']['size'];
+		$file_size = $_FILES['rpicld_file']['size'];
 		$allowed_file_size = 4096000; // Here we are setting the file size limit to 500 KB = 500 × 1024
 
 		// Check for file size limit
@@ -155,7 +155,7 @@ class Cloud_Upload {
 
 		$overrides = array( 'action' => 'wp_handle_upload' );
 
-		$file = $_FILES['wpcfu_file'];
+		$file = $_FILES['rpicld_file'];
 		$movefile     = wp_handle_upload( $file,$overrides);
 
 		$c = file_get_contents($movefile['file']);
@@ -163,7 +163,7 @@ class Cloud_Upload {
 
 		$cfg = new Cloud_Config($_POST['rpicloud_key']);
 
-		$file_type = wp_check_filetype( $_FILES['wpcfu_file']['name'] );
+		$file_type = wp_check_filetype( $_FILES['rpicld_file']['name'] );
 		$file_extension = $file_type['ext'];
 
 		// Check for valid file extension
@@ -223,7 +223,7 @@ class Cloud_Upload {
 		$curl = curl_init();
 
 		curl_setopt_array($curl, [
-			CURLOPT_URL => $cfg->get_baseUri() . encodePath($uploaddir .$_FILES['wpcfu_file']['name']),
+			CURLOPT_URL => $cfg->get_baseUri() . encodePath($uploaddir .$_FILES['rpicld_file']['name']),
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_ENCODING => "",
 			CURLOPT_MAXREDIRS => 10,
@@ -268,10 +268,10 @@ class Cloud_Upload {
 
 
 		$event = new stdClass();
-		$event->filename = $_FILES['wpcfu_file']['name'];
+		$event->filename = $_FILES['rpicld_file']['name'];
 		$event->uploaddir = $uploaddir;
 		$event->dirlabel = $dirlabel;
-		$event->fileurl = Cloud_Core::$shorturl .  $cfg->get_transkey() .'/'. encodePath( $uploaddir . $_FILES['wpcfu_file']['name']);
+		$event->fileurl = Cloud_Core::$shorturl .  $cfg->get_transkey() .'/'. encodePath( $uploaddir . $_FILES['rpicld_file']['name']);
 		$event->username = $username;
 		$event->date = date("j.n.Y H:i");
 		$event->origin = get_permalink($_POST['id']).$key;

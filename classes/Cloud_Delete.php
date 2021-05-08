@@ -34,11 +34,11 @@ class Cloud_Delete {
 		$form .= '<input id="' . $tree_id . '-cloud-del-file" name="file" value="" type="hidden">';
 		$form .= '<input class="cloud-username" name="form_user" value="" type="hidden">';
 		$form .= '<input id="' . $tree_id . '-cloud-del-nodekey" name="nodekey" value="" type="hidden">';
-		$form.=   wp_nonce_field( 'delete_wpcfu_file', 'wpcfu_nonce', true, false );
+		$form.=   wp_nonce_field( 'delete_rpicld_file', 'rpicld_nonce', true, false );
 		$form .= '<input type="hidden" id="' . $tree_id . '-cloud-base-dir" name="dir" value="">';
 		$form .= '<input type="hidden" id="' . $tree_id . '-cloud-base-startdir" name="startdir" value="">';
 		$form .= '<p  class="cloud-confirm-delete-message"></p>';
-		$form .= '<input type="submit" value="Löschen" class="button button-primary" name="delete_wpcfu_file">';
+		$form .= '<input type="submit" value="Löschen" class="button button-primary" name="delete_rpicld_file">';
 		$form .= '<input type="button" class="button button-secondary" value="Abbrechen" onclick="jQuery(\'#' . $tree_id . '-cloud-confirm-delete-message\').hide()">';
 
 		$form .= '</form>';
@@ -52,7 +52,7 @@ class Cloud_Delete {
 	public static function handle_delete(){
 
 		// Stop immidiately if form is not submitted
-		if ( ! isset( $_POST['delete_wpcfu_file'] ) ) {
+		if ( ! isset( $_POST['delete_rpicld_file'] ) ) {
 			return;
 		}
 
@@ -60,7 +60,7 @@ class Cloud_Delete {
 			wp_die( esc_html__( 'Transient Key missing', 'theme-text-domain' ) );
 		}
 		// Verify nonce
-		if ( ! wp_verify_nonce( $_POST['wpcfu_nonce'], 'delete_wpcfu_file' ) ) {
+		if ( ! wp_verify_nonce( $_POST['rpicld_nonce'], 'delete_rpicld_file' ) ) {
 			wp_die( esc_html__( 'Nonce mismatched' ) );
 		}
 		if(! isset($_POST['file'])){
