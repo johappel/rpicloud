@@ -8,24 +8,30 @@ class Cloud_Directory {
 	public $_name = '';
 
 	public $_dirs = [];
+	//public $_folders = [];
 	public $_files = [];
-	protected $key;
+	//protected $key;
+	protected $cfg;
+
 
 	public function __construct($name)
 	{
 		$this->_name = $name;
 
-		$this->key = Cloud_Config::get_Instance()->get_transkey();
+		$this->cfg = Cloud_Config::get_Instance();
+
+		//$this->key = $this->cfg->get_transkey();
 	}
 
 	public function get_name(){
 		return decodePath($this->_name);
 	}
 
-	public function create_dir($dir)
+	public function create_dir($dir,$key)
 	{
 		if (!isset($this->_dirs[$dir])) {
 			$this->_dirs[$dir] = new Cloud_Directory($dir);
+			$this->_dirs[$dir]->_key=$key;
 		}
 		return $this->_dirs[$dir];
 	}
@@ -55,16 +61,35 @@ class Cloud_Directory {
 		}
 	}
 
-	public function print_tree()
+	public function print_tree($currdir = '/')
 	{
+
 		$echo = '<ul>';
 		foreach ($this->_dirs as $dir) {
-			$echo .= '<li class="folder">' . $dir->get_name();
-			$echo .= $dir->print_tree();
+
+			$currdir .= $dir->get_name().'/';
+
+			$keydata = '';
+			if($this->cfg->is_allow_del()){
+				$start = strlen($this->cfg->get_uriPrefix())-1;
+				$keydata = substr($dir->_key,$start);
+				$keydata = base64_encode($keydata);
+				$keydata = ' data-file="'.$keydata.'"';
+			}
+			$echo .= "\n".'<li class="folder"'.$keydata.'>' . $dir->get_name();
+			$echo .= $dir->print_tree($currdir);
 			$echo .= '</li>';
 		}
 		foreach ($this->_files as $file) {
-			$echo .= '<li class="file" data-mimetype="'.$file->get_type().'"><a href="' . $file->get_link() . '">' . $file->get_name() . '</a></li>';
+
+			$keydata = '';
+			if($this->cfg->is_allow_del()){
+				$start = strlen($this->cfg->get_uriPrefix())-1;
+				$keydata = substr($file->_key,$start);
+				$keydata = base64_encode($keydata);
+				$keydata = ' data-file="'.$keydata.'"';
+			}
+			$echo .= '<li class="file" data-mimetype="'.$file->get_type().'"'.$keydata .'><a href="' . $file->get_link() . '">' . $file->get_name() . '</a></li>';
 		}
 		$echo .= '</ul>';
 		return $echo;

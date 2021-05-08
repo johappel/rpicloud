@@ -4,11 +4,13 @@
 
 Class Cloud_Core{
 	static $pluginurl;
+	static $shorturl;
 	static $plugindir;
 	static $wpdir;
+	static $officeurl;
+	static $frameurl;
 
 	static function init(){
-
 
 		//oembedder
 		wp_oembed_add_provider('https://cloud.rpi-virtuell.de/index.php/s/*', Cloud_Core::$pluginurl .'oembed.php', false);
@@ -19,15 +21,20 @@ Class Cloud_Core{
 		add_shortcode('rpicloud', array('Cloud_Core','rpicloud_dir'));
 
 		Cloud_Upload::handle_file_upload();
+		Cloud_Delete::handle_delete();
 
-		wp_enqueue_style('fancytree_style', self::$pluginurl.'/fancytree/skin-win8/ui.fancytree.min.css');
-		wp_enqueue_style('cloud_style', self::$pluginurl.'/css/form.css');
+
+		wp_enqueue_script('jquery', self::$pluginurl.'js/jquery-3.6.0.min.js',null,false,false);
+		wp_enqueue_style('fancytree_style', self::$pluginurl.'fancytree/skin-win8/ui.fancytree.min.css');
+		wp_enqueue_style('cloud_style', self::$pluginurl.'css/form.css');
 		wp_enqueue_script('jquery', self::$pluginurl.'js/jquery-3.6.0.min.js');
 		wp_enqueue_script('fancytree', self::$pluginurl.'fancytree/jquery.fancytree-all-deps.js');
-		wp_enqueue_script('cloud', self::$pluginurl.'js/cloud.js');
+		wp_enqueue_script('cloud', self::$pluginurl.'js/cloud.js',null,false,true);
+		wp_enqueue_script('cloudframe', self::$pluginurl.'js/cloudframe.js');
+		wp_enqueue_style( 'dashicons' );
 
 		$rel_pluginurl =substr(str_replace(home_url(),'',self::$pluginurl),1);
-		add_rewrite_rule( '^cloud/([^/]*)/(.*)$', $rel_pluginurl.'download.php?key=$1&file=$2', 'bottom' );
+		add_rewrite_rule( '^cloud/([^/]*)/(.*)$', $rel_pluginurl.'download.php?rpicloud_key=$1&file=$2', 'bottom' );
 		add_rewrite_rule( '^cloudview/([^/]*)$', $rel_pluginurl.'viewer.php?url=$1', 'bottom' );
 
 		//rpicloud page generieren
@@ -81,49 +88,71 @@ Class Cloud_Core{
 		}
 		$tree_id = 'tree'.$post->nc;
 
+		//read some params from sortcode
+
 		$atts = shortcode_atts( array(
 			'url' => 'https://cloud.rpi-virtuell.de/index.php/s/mmoyLdxnLXLQ34W',
 			'password' => '',
 			'username' => '',
 			'dir' => '/',
 			'upload' => true,
+			'allow_delete' => true,
 			'header-label'=> 'Neue Dateien hinzufügen',
 			'folder-label'=> 'Datei in neuen Unterordner kopieren?',
 			'folder-placeholder'=> 'Ordnername oder frei lassen',
+			'confirm_delete'=> 'Möchtest du %name% wirklich löschen?',
 			'allowed_extensions' => 'jpg,jpeg,png',
 			'anonym-upload' => 'true'
-
 		),   $atts, 'rpicloud' );
+
 
 		$txt_header = $atts['header-label'];
 		$txt_folder = $atts['folder-label'];
 		$txt_placeholder = $atts['folder-placeholder'];
+		$txt_confirm_delete = $atts['confirm_delete'];
 
+		//save the shortcode to options
 		$option_key = self::add_key_to_options($atts, $post);
 
+		//set the sabre nextcloud client
 		$option_value = serialize($atts);
-
 		$client = new Cloud_Client($option_key, $option_value);
 
+		// sanitize dirs
 		$dir_arr = explode('/', $atts['dir']);
 		$arr =array();
 		foreach ($dir_arr as $part){
 			if(!$part) continue;
 			$arr[]=$part;
 		}
+
+		// define the root dir of the tree
 		$start_dir = implode('/',$arr);
 		if($start_dir){
 			$start_dir = '/'.$start_dir.'/';
 		}else{
 			$start_dir = '/';
 		}
-		$html  = '<div class="rpicloud">';
-		$html .= '<div id="'.$tree_id.'" class="tree">';
-		$html .= $client->get_folder_tree($start_dir);
-		$html .= '</div>';
+
+
+		//now let's generate the output
+
+		// rpicloud file tree container
+		$html  = '<div id="'.$tree_id.'-container" class="rpicloud rpicloud-container rpicloud-'.$tree_id.'">';
+
+		// toolbar
+		$html  .= '<div class="rpicloud rpicloud-toolbar"><span class="toolbar-username"></span></div>';
 
 		if($atts['upload'] == 'true'){
 
+			$html .= Cloud_Upload::display_userform();
+			//section for activity log
+			$html .= '<div id="' . $tree_id . '-cloud-log" class="rpicloud-log">';
+			$html .= Cloud_Helper::include_log( $post->ID, $tree_id );
+			$html .= '</div>'; //end log section
+
+
+			//section file upload form
 			$html .= Cloud_Upload::display_form(array(
 				'key'=> $option_key,
 				'dir'=> $start_dir,
@@ -131,17 +160,34 @@ Class Cloud_Core{
 				'header-label'=> $txt_header,
 				'folder-label'=> $txt_folder,
 				'folder-placeholder'=> $txt_placeholder
-			));
+			)); //end upload form section
+
+			//section file delete confirmation
+			if($atts['allow_delete'] == 'true') {
+				$html .= Cloud_Delete::display_form( array(
+					'transkey'=> $option_key,
+					'tree_id'=>$tree_id,
+					'confirm'=> $txt_confirm_delete,
+					'post_id'=> $post->ID
+				));
+			} //end delete form section
+
+			//toolbar button sho log section
+			$html  .= '<a href="javascript:void(0)" onclick="rpicloud.togglelog(\''.$tree_id.'\')" class="rpicloud-handle log">';
+			$html  .= '<span class="dashicons dashicons-clock"></span></a>';
+
 		}
 
-		$html .= '<a class="cloud_del" data="'.$tree_id.'">x</a>';
-		$html .= '</div>';
-
+		//build file tree section with nexcloud client
+		$html .= '<div id="'.$tree_id.'" class="tree">';
+		$html .= $client->get_folder_tree($start_dir);
+		$html .= '</div>'; //end file tree
+		$html .= '</div>'; //end rpicloud file tree container
 
 		return $html;
 	}
 
-	static function rpicloud_frame($url, $pass='')
+	/*static function rpicloud_frame($url, $pass='')
 	{
 		$tree_id = 'tree';
 
@@ -163,7 +209,7 @@ Class Cloud_Core{
 		$html = Cloud_Helper::display_tree(1, $tree_id, $tree_content);
 
 		return $html;
-	}
+	}*/
 
 	static function add_key_to_options($atts = null, $post){
 

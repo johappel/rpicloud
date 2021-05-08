@@ -7,20 +7,21 @@ if(
 
 ){
 
-	$shortcode = '[rpicloud url="'.$url.'" password="" dir="/" upload="false" delete="false"]';
+	$home = 'https://' . $_SERVER['HTTP_HOST'] .'/rpicloud/?url='.$url;
 
-	$html = '<div class="wp-block">'.$shortcode.'</div>';
+	$html = '<iframe frameBorder="0" width="100%" height="300" src="'.$home.'"></iframe>';
+	$html .= '<script src="/wp-content/plugins/rpicloud/js/cloudframe.js"></script>';
 
 	$json = json_encode($html);
 
 	?>
 	{
 	"version": "1.0",
-	"type": "video",
-	"title": "rpicloud",
-	"url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Nextcloud_Logo.svg/320px-Nextcloud_Logo.svg.png",
-	"author_name": "rpi-virtuell",
-	"author_url": "http://rpi-virtuell.de",
+	"type": "rich",
+    "width":"100%",
+    "height":"300",
+    "title": "rpicloud",
+	"thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Nextcloud_Logo.svg/320px-Nextcloud_Logo.svg.png",
 	"provider_name": "rpi-virtuell",
 	"provider_url": "https://rpi-virtuell.de",
 	"html":<?php echo $json; ?>

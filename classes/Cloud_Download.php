@@ -19,10 +19,20 @@ class Cloud_Download {
 		# load file
 		$response = $client->request('GET', $file);
 
+		if(isset($_GET['download'])){
+			$response['headers']['content-type'][0]='application/download';
+		}
+
 		//var_dump($response['headers']['content-type'][0]);die();
 
-
-		self:self::sendfile($response, $file);
+		switch($response['headers']['content-type'][0]){
+			case 'text/markdown':
+			case 'text/markdown;charset=UTF-8':
+				self::markdown($response, $file);
+				break;
+			default:
+				self::sendfile($response, $file);
+		}
 
 
 
@@ -39,5 +49,25 @@ class Cloud_Download {
 		header('Accept-Ranges: bytes');
 		echo $response['body'];
 		die();
+	}
+
+	static function markdown($response,$file){
+		# get file name
+		$parts = explode('/', $file);
+		$filename = $parts[count($parts) - 1];
+		status_header(200);
+		header('Content-Type: text/html');
+		header('Content-Disposition: inline;filename="' . $filename . '"');
+		header('Content-Transfer-Encoding: binary');
+		header('Content-Length: ' . $response['headers']['content-length'][0]);
+		header('Accept-Ranges: bytes');
+
+		echo '<html><head><style>*{font-family:Arial} body{margin:2%}</style><title>'.$filename.'</title></head><body>';
+		$Parsedown = new Parsedown();
+		echo $Parsedown->text($response['body']);
+		echo '<hr><a href="?'.$_SERVER['QUERY_STRING'].'&download">Download</a>';
+		echo '</body></html>';
+		die();
+
 	}
 }

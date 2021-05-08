@@ -1,6 +1,7 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteCond %{REQUEST_URI} !/fancytree/
+    RewriteCond %{REQUEST_URI} !/jquery-ui.*/
     RewriteCond %{REQUEST_URI} !/css/
     RewriteCond %{REQUEST_URI} !/js/
     RewriteRule ^([^/]*)(.*)$ download.php?key=$1&file=$2 [NC,L,QSA]

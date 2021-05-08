@@ -13,6 +13,11 @@ class Cloud_Config {
 	protected $uri_prefix               = '/public.php/webdav/';
 	protected $publicUri                = 'https://cloud.rpi-virtuell.de/s/';
 	protected $allowedExtensions         = 'jpg,png,gif';
+	protected $allow_anon                = false;
+	protected $allow_del                 = true;
+	protected $allow_upload              = false;
+	protected $dir                       = "/";
+
 
 
 	static $objInstance;
@@ -54,6 +59,7 @@ class Cloud_Config {
 			$this->set_baseUri($u['scheme'].'://'.$u['host'].'/public.php/webdav');
 			$userName = substr( strrchr($u['path'],'/'), 1);
 			$this->set_userName($userName);
+			$this->set_baseDir($atts['dir']);
 
 		}else{
 
@@ -68,11 +74,16 @@ class Cloud_Config {
 
 		$this->set_allowedExtensions($atts['allowed_extensions']);
 
+
+
 		self::$objInstance = $this;
 
 	}
 	public function get_userName(){
 		return $this->userName;
+	}
+	public function get_baseDir(){
+		return $this->dir;
 	}
 
 	public function get_allowedExtensions(){
@@ -84,9 +95,6 @@ class Cloud_Config {
 	public function get_password(){
 		return $this->password;
 	}
-	public function get_mod_rewrite_is_enabled(){
-		return $this->mod_rewrite_is_enabled;
-	}
 	public function get_uriPrefix(){
 		return $this->uri_prefix;
 	}
@@ -95,6 +103,18 @@ class Cloud_Config {
 	}
 	public function get_transkey(){
 		return $this->transkey;
+	}
+	public function is_mod_rewrite_is_enabled(){
+		return $this->mod_rewrite_is_enabled;
+	}
+	public function is_allow_anon(){
+		return $this->allow_anon;
+	}
+	public function is_allow_del(){
+		return $this->allow_del;
+	}
+	public function is_allow_upload(){
+		return $this->allow_upload;
 	}
 
 	public function client_settings(){
@@ -105,11 +125,17 @@ class Cloud_Config {
 		);
 	}
 
-	public static function get_Instance(){
+	public static function get_Instance($transkey = null){
 
-		if (self::$objInstance == null && isset($_GET['key'])) {
-			self::$objInstance = new static($_GET['key']);
+		if ($transkey !== null) {
+			self::$objInstance = new static($transkey);
+		}elseif (self::$objInstance == null && isset($_REQUEST['rpicloud_key'])){
+			self::$objInstance = new static($_REQUEST['rpicloud_key']);
+		}elseif(self::$objInstance == null && $_SERVER['REQUEST_METHOD'] === 'POST'){
+
+			wp_die('Missing Config transient');
 		}
+
 		return self::$objInstance;
 
 	}
@@ -132,6 +158,18 @@ class Cloud_Config {
 	}
 	public function set_key($param){
 		$this->transkey = $param;
+	}
+	public function set_baseDir($param){
+		$this->dir = $param;
+	}
+	public function set_allow_anon($param){
+		$this->allow_anon = $param;
+	}
+	public function set_allow_del($param){
+		$this->allow_del = $param;
+	}
+	public function set_allow_upload($param){
+		$this->allow_upload = $param;
 	}
 	public function set_allowedExtensions($param){
 

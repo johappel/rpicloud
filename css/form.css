@@ -18,33 +18,137 @@ ul.fancytree-container,.cloud_upload{
 }
 .rpicloud{
     background-color: #ffffff;
-    padding: 10px 0 0 0;
-    border: 1px solid #ddd;
+    padding: 0px 0 0 0;
+    /*border: 1px solid #ddd;*/
     border-radius: 3px;
 }
-.cloud_upload{
-    border-top: 1px solid #ddd;
-    padding: 5px 20px;
-    background-color: #efefef;
+.rpicloud-toolbar{
+    display: flex;
+    background-color: #ddd;
+    justify-content: flex-end;
+    padding: 0;
+    border-radius: 4px 4px 0px 0px;
 }
+.rpicloud-toolbar .toolbar-username{
+    margin-right: 50px;
+}
+.help-text{
+    font-size:12px!important;
+    line-height: 14px;
+}
+
+.rpicloud-handle span{
+    width: 24px;
+    height: 24px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    margin: 1px 1px;
+    padding: 2px;
+    color: #999;
+}
+.rpicloud-handle span:hover{
+    background: #777777 !important;
+    color: white!important;
+}
+.rpicloud-handle.delete span:hover{
+    background: red!important;
+}
+.rpicloud-handle.upload span:hover{
+    background: limegreen!important;
+}
+.rpicloud-wrapper{
+    margin: 10px;
+}
+.cloud_upload, .cloud_del{
+    display: none;
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+}
+.cloud_del .rpicloud-wrapper{
+    border: 1px dot-dash red;
+    border-radius: 10px;
+    padding: 20px;
+}
+.rpicloud .button{
+    padding: 5px;
+    margin-right: 20px;
+    border: 2px solid grey;
+    border-radius: 4px;
+    background-color: #ddd;
+    color: #444;
+}
+.rpicloud .button:hover{
+    padding: 5px;
+    margin-top: -1px;
+    margin-right: 20px;
+    border: 2px solid grey;
+    border-radius: 4px;
+}
+.rpicloud .button-primary{
+    background-color: green;
+    border-color: darkgreen;
+    color: #fff;
+}
+.cloud_upload .button-primary:hover{
+    background-color: mediumseagreen;
+}
+.cloud_del .button-primary{
+    background-color: red;
+    border-color: darkred;
+}
+.cloud_del .button-primary:hover{
+    background-color: orangered;
+}
+.cloud_del .button-secondary:hover{
+    background-color: #eee;
+    color: black;
+}
+.rpicloud-user{
+    border-bottom: 1px solid #ddd;
+}
+.form-field.user-wrapper{
+    margin: 10px 50px;
+}
+
+.rpicloud input[type="text"]{
+    background-color: #efefef;
+    color: red;
+}
+
 input[type="text"].cloud-upload-dir {
     border: 1px solid #ccc;
     border-radius: 3px;
+    color: darkblue;
+}
+.cloud-upload-label {
+    position: absolute;
+    background: #eee;
+    width: 115px;
+    padding: 0 4px;
+    color:darkblue;
 }
 .cloud-upload-file {
     border: 1px solid #ccc;
     display: inline-block;
-    padding: 10px 11px;
+    padding: 7px 10px;
     cursor: pointer;
     width: 100%;
-    text-align: right;
+    text-align: left;
     border-radius: 3px;
+    background-color: #efefef;
+    position: relative;
+}
+.cloud-upload-file:hover{
+    margin-top: -2px;
+    border-bottom-width: 2px ;
 }
 .cloud-upload-file input{
     margin-right: 20px;
-    float: left;
     font-size: 14px;
 }
+
+
 details summary{
     font-size: 13px;
 }
@@ -66,12 +170,16 @@ a.cloud_del:hover {
     background-color: #3875d7;
     color: #fff;
 }
-/*
-details[open] summary ~ * {
-    animation: sweep 1.5s ease-in-out;
+.rpicloud-log{
+    max-height: 200px;
+    overflow-x: hidden;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
 }
-@keyframes sweep {
-    0%    {opacity: 0; margin-left: -10px}
-    100%  {opacity: 1; margin-left: 0px}
+
+.rpicloud-log-wrapper{
+    margin: 10px;
 }
-*/
+.rpicloud-log-wrapper li{
+    font-size: 90%;
+}

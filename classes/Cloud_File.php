@@ -58,22 +58,22 @@ class Cloud_File {
 
 		);
 
-		if ($this->config->get_mod_rewrite_is_enabled()) {
+		if ($this->config->is_mod_rewrite_is_enabled()) {
 
-			$download_url = home_url().'/cloud/'. $this->config->get_transkey().'/'.$this->get_short_key() ;
+			$download_url = Cloud_Core::$shorturl. $this->config->get_transkey().'/'.$this->get_short_key() ;
 
 
 			//Link to Office Viewer
 			if(in_array($this->get_type(),$officedocs)){
 
-				$download_url = home_url().'/cloudview/'.base64_encode(urlencode($download_url));
+				$download_url = Cloud_Core::$officeurl . base64_encode(urlencode($download_url));
 
 			}
 
 			return $download_url;
 
 		} else {
-			return Cloud_Core::$pluginurl.'download.php?key='.$this->config->get_transkey().'&file=' . urlencode($this->get_short_key()) . '"';
+			return Cloud_Core::$pluginurl.'download.php?rpicloud_key='.$this->config->get_transkey().'&file=' . urlencode($this->get_short_key()) . '"';
 		}
 
 	}

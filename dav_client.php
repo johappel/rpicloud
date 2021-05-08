@@ -9,4 +9,4 @@ require_once 'classes/Cloud_Download.php';
 require_once 'classes/Cloud_Upload.php';
 require_once 'classes/Cloud_File.php';
 require_once 'classes/Cloud_Helper.php';
-
+require_once 'classes/Cloud_Delete.php';

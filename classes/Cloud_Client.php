@@ -64,7 +64,7 @@ class Cloud_Client {
 					continue;
 				}
 				if (!(count($parts) - 1 == $j && isset($value['{DAV:}getcontenttype']))) {
-					$current = $current->create_dir($part);
+					$current = $current->create_dir($part,$key);
 				} else {
 					$current->create_file($part, $key, $value);
 				}
@@ -72,7 +72,7 @@ class Cloud_Client {
 			}
 		}
 
-		return $root->print_tree();
+		return $root->print_tree($this->cfg->get_baseDir());
 
 
 	}
