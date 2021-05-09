@@ -168,7 +168,7 @@ class Cloud_Upload {
 
 		// Check for valid file extension
 
-		if (! empty($cfg->get_allowedExtensions()) && ! in_array( $file_extension, $cfg->get_allowedExtensions() ) ) {
+		if (!$cfg->get_allowedExtensions() && ! in_array( $file_extension, $cfg->get_allowedExtensions() ) ) {
 			  wp_die( sprintf(  esc_html__( 'Ungültige Dateierweiterung, nur erlaubt: %s', 'rpicloud' ), implode( ', ', $cfg->get_allowedExtensions() ) ) );
 		}
 
