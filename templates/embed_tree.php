@@ -5,21 +5,28 @@
  */
 $passwd = '';
 
-$url = $_REQUEST['url'];
+$url = isset($_REQUEST['url'])?$_REQUEST['url']:'';
 
-$u = parse_url($url);
+if(empty(str_replace(':','',$url))){
+	$html = '<div style="width: 100%; text-align: center;padding: 10px;">Url des geteilten Nextcloud Ordners angeben</div>';
+}else{
 
-$path = substr( strrchr($u['path'],'/'), 1);
+	$u = parse_url($url);
 
-$params = explode(':', $path);
+	$path = substr( strrchr($u['path'],'/'), 1);
 
-$usr = $params[0];
+	$params = explode(':', $path);
 
-if(isset($params[1])){
-	$passwd = $params[1];
+	$usr = $params[0];
+
+	if(isset($params[1])){
+		$passwd = $params[1];
+	}
+	$url = $u['scheme'].'://'.$u['host'].'/s/'.$usr;
+
+	$html = do_shortcode('[rpicloud dir="/" upload="false" url="'.$url.'" password="'.$passwd.'"]');
+
 }
-$url = $u['scheme'].'://'.$u['host'].'/s/'.$usr;
-
 
 
 ?>
@@ -29,12 +36,13 @@ $url = $u['scheme'].'://'.$u['host'].'/s/'.$usr;
 		<?php wp_print_head_scripts();?>
 		<?php wp_print_styles();?>
 		<style>
-
-
+            *{
+                font-family: sans-serif;
+            }
 		</style>
 	</head>
 	<body>
-		<?php echo do_shortcode('[rpicloud dir="/" upload="false" url="'.$url.'" password="'.$passwd.'"]') ?>
+		<?php echo $html; ?>
         <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__));?>js/cloudframe.content.js"></script>
         <?php wp_print_footer_scripts(); ?>
 	</body>

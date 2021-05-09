@@ -140,11 +140,11 @@ class Cloud_Upload {
 		$username = Cloud_Helper::get_username('Anonymous');
 
 		$file_size = $_FILES['rpicld_file']['size'];
-		$allowed_file_size = 4096000; // Here we are setting the file size limit to 500 KB = 500 × 1024
+		$allowed_file_size = 20480000; // Here we are setting the file size limit to 500 KB = 500 × 1024
 
 		// Check for file size limit
 		if ( $file_size >= $allowed_file_size ) {
-			wp_die( sprintf( esc_html__( 'File size limit exceeded, file size should be smaller than %d KB', 'theme-text-domain' ), $allowed_file_size / 1000 ) );
+			wp_die( sprintf( esc_html__( 'Dateigrößenlimit überschritten, Dateigröße sollte kleiner sein als %d KB', 'rpi cloud' ), $allowed_file_size / 1000 ) );
 		}
 
 		if ( ! function_exists( 'wp_handle_upload' ) ) {
@@ -167,12 +167,12 @@ class Cloud_Upload {
 		$file_extension = $file_type['ext'];
 
 		// Check for valid file extension
-		if ( ! in_array( $file_extension, $cfg->get_allowedExtensions() ) ) {
-			//	wp_die( sprintf(  esc_html__( 'Invalid file extension, only allowed: %s', 'theme-text-domain' ), implode( ', ', $allowed_extensions ) ) );
+
+		if (! empty($cfg->get_allowedExtensions()) && ! in_array( $file_extension, $cfg->get_allowedExtensions() ) ) {
+			  wp_die( sprintf(  esc_html__( 'Ungültige Dateierweiterung, nur erlaubt: %s', 'rpicloud' ), implode( ', ', $cfg->get_allowedExtensions() ) ) );
 		}
 
 		$uploaddir = isset($_POST['dir'])? $_POST['startdir'] . $_POST['dir'] : $_POST['startdir'];
-
 
 		$arr = explode('/',$uploaddir);
 		$dirs = [];
