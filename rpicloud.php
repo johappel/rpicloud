@@ -2,12 +2,13 @@
 /*
 Plugin Name: rpi Cloud Client
 Plugin URI: http:///
-Description: Wordpress Webdav Client which connects to a public NextCloud share.
+Description: Gutenberg Block, der über webdav einen öffentlich geteilten Ordner aus der Nextcloud innerhalb einer Seite darstellt. Alternativ ist auch die Verwendung über shortcode etwa in widgets möglich-
 Author: Joachim Happel
 Version: 1.0
 Author URI: http://joachim-happel.de
  */
 require_once 'vendor/autoload.php';
+require_once 'classes/Cloud_Block.php';
 require_once 'classes/Cloud_Core.php';
 require_once 'classes/Cloud_Config.php';
 require_once 'classes/Cloud_Client.php';
@@ -28,5 +29,3 @@ Cloud_Core::$wpdir = ABSPATH;
 
 
 add_action('init', array('Cloud_Core','init'),90);
-//add_action( 'enqueue_block_editor_assets', array('Cloud_Core','init'));
-

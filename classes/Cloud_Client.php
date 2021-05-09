@@ -21,14 +21,22 @@ class Cloud_Client {
 
 		$dir = Sabre\HTTP\encodePath($dir);
 
-		// Get folder content
-		$folder_content = $this->client->propFind('', array(
-			'{DAV:}displayname',
-			'{DAV:}getcontentlength',
-			'{DAV:}getlastmodified',
-			'{DAV:}getcontenttype',
-		), 10);
+		try{
 
+			// Get folder content
+			$folder_content = $this->client->propFind('', array(
+				'{DAV:}displayname',
+				'{DAV:}getcontentlength',
+				'{DAV:}getlastmodified',
+				'{DAV:}getcontenttype',
+			), 10);
+
+		}catch (Exception $e){
+			if($e->getCode()){
+				return '<div class="rpicloud-wrapper">Die Freigabe Link für deinen Cloud-Ordner ist ungültig oder das Passwort ist falsch</div>';
+			}
+			return('<div class="rpicloud-wrapper">Fehler ' . $e->getCode() . ' ist aufgetreten: '. $e->getMessage() . '</div>');
+		}
 
 
 		$root = new Cloud_Directory($dir);

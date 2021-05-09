@@ -301,7 +301,7 @@ const ___dedect__wpLoadBlockEditor_id = setInterval(function()
             setTimeout(function (){
                 //rpicloud.render(jQuery);
 
-                $(".tree").fancytree();
+                jQuery(".tree").fancytree();
                 iFrameResize();
 
             },1000)

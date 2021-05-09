@@ -1,9 +1,9 @@
 <?php
-
+//https://cloud.rpi-virtuell.de/index.php/s/d4EtzCiazRKgdzw
 $config = array(
     'baseUri' => 'https://cloud.rpi-virtuell.de/public.php/webdav',   # The URL of your NextCloud
-    'userName' => 'mmoyLdxnLXLQ34W',                                # Public link token (or user)
-    'password' => '',                                               # Password for link (or password for user)
+    'userName' => 'd4EtzCiazRKgdzw',                                # Public link token (or user)
+    'password' => 'dXASdDwkGZ',                                               # Password for link (or password for user)
     'mod_rewrite_is_enabled' => true,
     'uri_prefix' => '/public.php/webdav/',
 	'publicUri' => 'https://cloud.rpi-virtuell.de/s/'

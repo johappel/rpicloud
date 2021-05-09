@@ -10,10 +10,18 @@ Class Cloud_Core{
 	static $officeurl;
 	static $frameurl;
 
+	static function setup_lazzy_blocks(){
+
+
+	}
+
 	static function init(){
 
+
+
+
 		//oembedder
-		wp_oembed_add_provider('https://cloud.rpi-virtuell.de/index.php/s/*', Cloud_Core::$pluginurl .'oembed.php', false);
+		wp_oembed_add_provider('https://cloud.rpi-virtuell.de/index.php/s/*', self::$pluginurl .'oembed.php', false);
 
 		$embed_code = wp_oembed_get( 'https://cloud.rpi-virtuell.de/index.php/s/mmoyLdxnLXLQ34W' );
 		//var_dump($embed_code);die();
@@ -95,15 +103,36 @@ Class Cloud_Core{
 			'password' => '',
 			'username' => '',
 			'dir' => '/',
-			'upload' => true,
-			'allow_delete' => true,
+			'upload' => 'false',
+			'allow_delete' => 'false',
 			'header-label'=> 'Neue Dateien hinzufügen',
 			'folder-label'=> 'Datei in neuen Unterordner kopieren?',
 			'folder-placeholder'=> 'Ordnername oder frei lassen',
 			'confirm_delete'=> 'Möchtest du %name% wirklich löschen?',
 			'allowed_extensions' => 'jpg,jpeg,png',
-			'anonym-upload' => 'true'
+			'login-to-upload' => 'false',
+			'only-login' => 'false'
 		),   $atts, 'rpicloud' );
+
+
+
+		$atts['upload'] = ($atts['upload']==1)?'true':'false';
+		$atts['only-login'] = ($atts['only-login']==1)?'true':'false';
+		$atts['allow_delete'] = ($atts['allow_delete']==1)?'true':'false';
+		$atts['login-to-upload'] = ($atts['login-to-upload']==1)?'true':'false';
+
+		//var_dump($atts);
+
+		if(!is_user_logged_in()){
+
+			if($atts['only-login']==='true'){
+				return '';
+			}
+			if($atts['login-to-upload']==='true'){
+				$atts['upload'] = false;
+			}
+
+		}
 
 
 		$txt_header = $atts['header-label'];
@@ -187,29 +216,7 @@ Class Cloud_Core{
 		return $html;
 	}
 
-	/*static function rpicloud_frame($url, $pass='')
-	{
-		$tree_id = 'tree';
 
-		$atts = array(
-			'url' => $url,
-			'password' => $pass,
-			'dir' => '/',
-		);
-
-		$option_value = serialize($atts);
-
-		$client = new Cloud_Client('frame', $option_value);
-
-
-
-		$tree_content = $client->get_folder_tree($atts['dir']);
-
-
-		$html = Cloud_Helper::display_tree(1, $tree_id, $tree_content);
-
-		return $html;
-	}*/
 
 	static function add_key_to_options($atts = null, $post){
 
@@ -242,6 +249,221 @@ Class Cloud_Core{
 
 		return dirname(__DIR__).'/templates/';
 
+	}
+
+	static function add_block() {
+
+		if ( function_exists( 'lazyblocks' ) ) :
+
+			lazyblocks()->add_block( array(
+				'id' => 403,
+				'title' => 'Nectcloud Ordner',
+				'icon' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z" /></svg>',
+				'keywords' => array(
+					0 => 'Cloud',
+					1 => ' Folder',
+					2 => 'Filetree',
+				),
+				'slug' => 'lazyblock/nextcloud-tree',
+				'description' => '',
+				'category' => 'embed',
+				'category_label' => 'embed',
+				'supports' => array(
+					'customClassName' => true,
+					'anchor' => false,
+					'align' => array(
+						0 => 'wide',
+						1 => 'full',
+					),
+					'html' => false,
+					'multiple' => true,
+					'inserter' => true,
+				),
+				'ghostkit' => array(
+					'supports' => array(
+						'spacings' => false,
+						'display' => false,
+						'scrollReveal' => false,
+						'frame' => false,
+						'customCSS' => false,
+					),
+				),
+				'controls' => array(
+					'control_0c5bee435e' => array(
+						'type' => 'url',
+						'name' => 'url',
+						'default' => '',
+						'label' => 'Url',
+						'help' => '',
+						'child_of' => '',
+						'placement' => 'inspector',
+						'width' => '100',
+						'hide_if_not_selected' => 'false',
+						'save_in_meta' => 'false',
+						'save_in_meta_name' => '',
+						'required' => 'true',
+						'placeholder' => '',
+						'characters_limit' => '',
+					),
+					'control_a4ab654d41' => array(
+						'type' => 'text',
+						'name' => 'password',
+						'default' => '',
+						'label' => 'Passwort',
+						'help' => 'Das Passwort, welches zum Anzeigen deiner Nextcloud Freigabe erforderlich ist.',
+						'child_of' => '',
+						'placement' => 'inspector',
+						'width' => '100',
+						'hide_if_not_selected' => 'false',
+						'save_in_meta' => 'false',
+						'save_in_meta_name' => '',
+						'required' => 'false',
+						'placeholder' => '',
+						'characters_limit' => '',
+					),
+					'control_1c4b844e93' => array(
+						'type' => 'text',
+						'name' => 'dir',
+						'default' => '/',
+						'label' => 'Root',
+						'help' => 'Startverzeichnis innerhalb deines Ordners',
+						'child_of' => '',
+						'placement' => 'inspector',
+						'width' => '100',
+						'hide_if_not_selected' => 'false',
+						'save_in_meta' => 'false',
+						'save_in_meta_name' => '',
+						'required' => 'false',
+						'placeholder' => '/Untergerordneter Ordner/Anzuzeigender Ordner/',
+						'characters_limit' => '',
+					),
+					'control_467a294340' => array(
+						'type' => 'toggle',
+						'name' => 'allowupload',
+						'default' => '',
+						'label' => 'Upload erlaubt',
+						'help' => 'Voraussetzung ist, dass du das Hochladen und bearbeiten von Dateien in dem Nextcloud Ordner aktiviert hast',
+						'child_of' => '',
+						'placement' => 'inspector',
+						'width' => '100',
+						'hide_if_not_selected' => 'false',
+						'save_in_meta' => 'false',
+						'save_in_meta_name' => '',
+						'required' => 'false',
+						'checked' => 'false',
+						'alongside_text' => 'Erlaube Uploads',
+						'placeholder' => '',
+						'characters_limit' => '',
+					),
+					'control_981996462a' => array(
+						'type' => 'toggle',
+						'name' => 'allowdelete',
+						'default' => '',
+						'label' => 'Löschen erlaubt',
+						'help' => 'Voraussetzung ist, dass du das Hochladen und bearbeiten von Dateien in dem Nextcloud Ordner aktiviert hast',
+						'child_of' => '',
+						'placement' => 'inspector',
+						'width' => '100',
+						'hide_if_not_selected' => 'false',
+						'save_in_meta' => 'false',
+						'save_in_meta_name' => '',
+						'required' => 'false',
+						'checked' => 'false',
+						'alongside_text' => 'Erlaube Löschen von Dateien und Ordnern',
+						'placeholder' => '',
+						'characters_limit' => '',
+					),
+					'control_2309184dbf' => array(
+						'type' => 'toggle',
+						'name' => 'onlyloggedin',
+						'default' => '',
+						'label' => 'Login erforderlich',
+						'help' => 'Voraussetzung ist, dass du das Hochladen und bearbeiten von Dateien in dem Nextcloud Ordner aktiviert hast',
+						'child_of' => '',
+						'placement' => 'inspector',
+						'width' => '100',
+						'hide_if_not_selected' => 'false',
+						'save_in_meta' => 'false',
+						'save_in_meta_name' => '',
+						'required' => 'false',
+						'checked' => 'false',
+						'alongside_text' => 'Nur eingeloggte User dürfen Ordner und Dateien sehen',
+						'placeholder' => '',
+						'characters_limit' => '',
+					),
+					'control_4d7a0541b4' => array(
+						'type' => 'toggle',
+						'name' => 'onlyloggedin-upload',
+						'default' => '',
+						'label' => 'Login für Uploads erforderlich',
+						'help' => 'Voraussetzung ist, dass du das Hochladen und bearbeiten von Dateien in dem Nextcloud Ordner aktiviert hast',
+						'child_of' => '',
+						'placement' => 'inspector',
+						'width' => '100',
+						'hide_if_not_selected' => 'false',
+						'save_in_meta' => 'false',
+						'save_in_meta_name' => '',
+						'required' => 'false',
+						'checked' => 'false',
+						'alongside_text' => 'Login für Bearbeiten erzwingen',
+						'placeholder' => '',
+						'characters_limit' => '',
+					),
+					'control_a1c9b44bbf' => array(
+						'type' => 'text',
+						'name' => 'allowed_extensions',
+						'default' => '',
+						'label' => 'Erlaubte Dateiendungen',
+						'help' => 'Leer lassen um alles den Upload aller dateien zu erlauben',
+						'child_of' => '',
+						'placement' => 'inspector',
+						'width' => '100',
+						'hide_if_not_selected' => 'false',
+						'save_in_meta' => 'false',
+						'save_in_meta_name' => '',
+						'required' => 'false',
+						'placeholder' => 'jpg,jpeg,png',
+						'characters_limit' => '',
+					),
+				),
+				'code' => array(
+					'output_method' => 'php',
+					'editor_html' => '<?php
+    $del = $attributes[\'allowdelete\'] ?    \' x |\':\'\';
+    $upl = $attributes[\'allowupload\'] ?    \'<div class="rpicloud rpicloud-toolbar">| + |\'. $del . \' o | &nbsp; </div>\':\'\';
+    
+    $home =    \'https://\' . $_SERVER[\'HTTP_HOST\'] .\'/rpicloud/?url=\'.$attributes[\'url\'].\':\'.$attributes[\'password\'];
+    $html    = \'<div class="rpicloud rpicloud-container" style="border:1px solid #ddd">\';
+    $html .=    $upl;
+    $html .=    \'<iframe frameBorder="0" width="100%" height="100" src="\'.$home.\'"></iframe>\';
+    $html .= \'<script src="/wp-content/plugins/rpicloud/js/cloudframe.js"></script>\';
+    echo $html;
+    ?>',
+					'editor_callback' => '',
+					'editor_css' => '',
+					'frontend_html' => '<?php 
+    echo \'[rpicloud dir="/" \'.
+    \'url="\' .$attributes[\'url\'] . \'"    \'.
+    \'password="\' .$attributes[\'password\']. \'" \'.
+    \'dir="\' .$attributes[\'dir\']. \'" \'.
+    \'upload="\' .$attributes[\'allowupload\']. \'" \'.
+    \'allow_delete="\' .$attributes[\'allowdelete\']. \'" \'.
+    \'login-to-upload="\' .$attributes[\'onlyloggedin-upload\']. \'" \'.
+    \'only-login="\' .$attributes[\'onlyloggedin\']. \'" \'.
+    \'allowed_extensions="\' .$attributes[\'allowed_extensions\']. \'" \'.
+    \']\';
+    
+    ?>',
+					'frontend_callback' => '',
+					'frontend_css' => '',
+					'show_preview' => 'always',
+					'single_output' => false,
+				),
+				'condition' => array(
+				),
+			) );
+
+		endif;
 	}
 
 }

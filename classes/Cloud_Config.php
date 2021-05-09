@@ -13,7 +13,7 @@ class Cloud_Config {
 	protected $uri_prefix               = '/public.php/webdav/';
 	protected $publicUri                = 'https://cloud.rpi-virtuell.de/s/';
 	protected $allowedExtensions         = 'jpg,png,gif';
-	protected $allow_anon                = false;
+	protected $force_login_to_upload     = false;
 	protected $allow_del                 = true;
 	protected $allow_upload              = false;
 	protected $dir                       = "/";
@@ -107,8 +107,8 @@ class Cloud_Config {
 	public function is_mod_rewrite_is_enabled(){
 		return $this->mod_rewrite_is_enabled;
 	}
-	public function is_allow_anon(){
-		return $this->allow_anon;
+	public function is_force_login_to_upload(){
+		return $this->force_login_to_upload;
 	}
 	public function is_allow_del(){
 		return $this->allow_del;
@@ -162,8 +162,8 @@ class Cloud_Config {
 	public function set_baseDir($param){
 		$this->dir = $param;
 	}
-	public function set_allow_anon($param){
-		$this->allow_anon = $param;
+	public function set_force_login_to_upload($param){
+		$this->force_login_to_upload = $param;
 	}
 	public function set_allow_del($param){
 		$this->allow_del = $param;
