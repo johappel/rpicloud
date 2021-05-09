@@ -23,12 +23,18 @@ class Cloud_Download {
 			$response['headers']['content-type'][0]='application/download';
 		}
 
-		//var_dump($response['headers']['content-type'][0]);die();
+		//var_dump($response['headers']['content-type'][0]);
+		//var_dump($response['body']);die();
 
 		switch($response['headers']['content-type'][0]){
 			case 'text/markdown':
 			case 'text/markdown;charset=UTF-8':
 				self::markdown($response, $file);
+				break;
+			case 'application/internet-shortcut':
+				$link = strchr($response['body'],'http');
+				header('location: '.$link);
+				die();
 				break;
 			default:
 				self::sendfile($response, $file);

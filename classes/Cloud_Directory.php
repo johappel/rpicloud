@@ -20,6 +20,10 @@ class Cloud_Directory {
 
 		$this->cfg = Cloud_Config::get_Instance();
 
+		if($this->cfg === null){
+			$this->cfg = new Cloud_Config(false);
+		}
+
 		//$this->key = $this->cfg->get_transkey();
 	}
 

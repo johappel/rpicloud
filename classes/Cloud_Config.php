@@ -7,7 +7,7 @@ class Cloud_Config {
 
 	protected $transkey;
 	protected $baseUri                  ='https://cloud.rpi-virtuell.de/public.php/webdav';
-	protected $userName                 = 'mmoyLdxnLXLQ34W';
+	protected $userName                 = '';
 	protected $password                 = '';
 	protected $mod_rewrite_is_enabled   = true;
 	protected $uri_prefix               = '/public.php/webdav/';
