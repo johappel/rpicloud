@@ -34,7 +34,7 @@ class Cloud_Block {
 		}
 
 
-		if(is_plugin_active( 'lazy-blocks/lazy-blocks.php' )){
+		if (function_exists( 'is_plugin_active' ) && is_plugin_active( 'lazy-blocks/lazy-blocks.php' )){
 			return;
 		}
 
@@ -73,11 +73,13 @@ class Cloud_Block {
 		$upl = $attributes['allowupload'] ?  '<div class="in-editor-toolbar">'.$ius.$createdir.$iup. $del . $ilg .'</div>':'';
 
 
-		$home =  'https://' . $_SERVER['HTTP_HOST'] .'/rpicloud/?url='.$attributes['url'].':'.$attributes['password']. '&dir='.urlencode($attributes['dir']);
+		;
+
+		$home =  get_home_url() .'/rpicloud/?url='.$attributes['url'].':'.$attributes['password']. '&dir='.urlencode($attributes['dir']);
 		$html  = '<div class="rpicloud rpicloud-container" style="border:1px solid #ddd">';
 		$html .=  $upl;
 		$html .=  '<iframe frameBorder="0" width="100%" height="100" src="'.$home.'"></iframe>';
-		//$html .= '<script src="/wp-content/plugins/rpicloud/js/cloudframe.js"></script>';
+		$html .= '<script>console.log("'.$home.'");</script>';
 
 
 		return $html;

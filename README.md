@@ -9,31 +9,45 @@ Wordpress Plugin which connects to a public NextCloud (DAV) share and provides a
 
 ### Installation
 
-1. Clone the plugin on your server (in the `/wp-content/plugins/` directory).
-   1. `git clone https://github.com/johappel/rpicloud.git`
-2. `composer install`
-4. Activate the plugin.
-5. Use the shortcode `[rpicloud url="<nectcloud-share>"]`
+1. Install [lazy blocks](https://wordpress.org/plugins/lazy-blocks/) (Do not activate)
+1. Clone the plugin on your server (in the `/wp-content/plugins/` directory). 
+1. `git clone https://github.com/johappel/rpicloud.git`
+1. `composer install`
+1. Activate the plugin.
+1. edit .htaccess
+
+##### add this lines to your .htaccess file
+```
+
+###########################################
+## Lines from rpicloud plugin
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^^cloud/([^/]*)/(.*)$ /wp-content/plugins/rpicloud/download.php?rpicloud_key=$1&file=$2 [QSA,L]
+RewriteRule ^^cloudview/([^/]*)$ /wp-content/plugins/rpicloud/viewer.php?url=$1 [QSA,L]
+</IfModule>
+############################################
+```
+
+### Usage
+
+* Use the shortcode `[rpicloud url="<nectcloud-share>[:password]"]`
+* Use the "Nextcloud" Block  in the Blockeditor 
 
 ## Built With
 
 * [WordPress](https://github.com/WordPress/WordPress)
 * [Composer](https://github.com/composer/composer) - Dependency Manager for PHP
 * [sabre/dav](http://sabre.io) - sabre/dav is a CalDAV, CardDAV and WebDAV framework for PHP
+* [fancytree](https://github.com/mar10/fancytree) JavaScript tree view / tree grid plugin
+* [parsedown](https://github.com/erusev/parsedown) Markdown Parser in PHP
+* [lazy blocks](https://github.com/nk-crew/lazy-blocks) Gutenberg blocks visual constructor
 
 ## License
 
 This project is licensed under the GNU GPL License - see the [LICENSE](LICENSE) file for details.
 
-## Improvements
-
-This plugin is a frist rough working draft and could be heavily improved!
-
-* Add comments
-* Use Wordpress Options API
-* Cache the directory listing in order to improve loading time
-* Use more than one share link
-* Create a namespace for objects, create own files for classes, use properly imports ...
-* Abstract class for File and Directory
-* Use Wordpress coding standards :-)
-* ...
+### TODO
+* [ ] add Multisite support
+* [ ] add Mediainsert from Tree selection 
