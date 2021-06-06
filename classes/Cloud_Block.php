@@ -62,14 +62,23 @@ class Cloud_Block {
 
 	function cloud_editor_output($output, $attributes){
 
-		$del = $attributes['allowdelete'] ?  ' x |':'';
-		$upl = $attributes['allowupload'] ?  '<div class="rpicloud rpicloud-toolbar">| + |'. $del . ' o | &nbsp; </div>':'';
+		$iup = '<span class="dashicons dashicons-upload"></span>';
+		$ifo = '<span class="dashicons dashicons-plus"></span>';
+		$idl = '<span class="dashicons dashicons-no"></span>';
+		$ilg = '<span class="dashicons dashicons-backup"></span>';
+		$ius = '<span class="dashicons dashicons-admin-users"></span>';
 
-		$home =  'https://' . $_SERVER['HTTP_HOST'] .'/rpicloud/?url='.$attributes['url'].':'.$attributes['password'];
+		$del = $attributes['allowdelete'] ? $idl :'';
+		$createdir = $attributes['allowcreatedir'] ?  $ifo:'';
+		$upl = $attributes['allowupload'] ?  '<div class="in-editor-toolbar">'.$ius.$createdir.$iup. $del . $ilg .'</div>':'';
+
+
+		$home =  'https://' . $_SERVER['HTTP_HOST'] .'/rpicloud/?url='.$attributes['url'].':'.$attributes['password']. '&dir='.urlencode($attributes['dir']);
 		$html  = '<div class="rpicloud rpicloud-container" style="border:1px solid #ddd">';
 		$html .=  $upl;
 		$html .=  '<iframe frameBorder="0" width="100%" height="100" src="'.$home.'"></iframe>';
-		$html .= '<script src="/wp-content/plugins/rpicloud/js/cloudframe.js"></script>';
+		//$html .= '<script src="/wp-content/plugins/rpicloud/js/cloudframe.js"></script>';
+
 
 		return $html;
 	}
@@ -80,11 +89,14 @@ class Cloud_Block {
 		     'password="' .$attributes['password']. '" '.
 		     'dir="' .$attributes['dir']. '" '.
 		     'upload="' .$attributes['allowupload']. '" '.
+		     'allow_createdir="' .$attributes['allowcreatedir']. '" '.
 		     'allow_delete="' .$attributes['allowdelete']. '" '.
+		     'allow_viewer="' .$attributes['allowviewer']. '" '.
 		     'login-to-upload="' .$attributes['onlyloggedin-upload']. '" '.
 		     'only-login="' .$attributes['onlyloggedin']. '" '.
 		     'allowed_extensions="' .$attributes['allowed_extensions']. '" '.
 		     ']';
+
 		return $output;
 	}
 
@@ -160,6 +172,7 @@ class Cloud_Block {
 						'placeholder' => '',
 						'characters_limit' => '',
 					),
+
 					'control_1c4b844e93' => array(
 						'type' => 'text',
 						'name' => 'dir',
@@ -176,12 +189,32 @@ class Cloud_Block {
 						'placeholder' => '/Untergerordneter Ordner/Anzuzeigender Ordner/',
 						'characters_limit' => '',
 					),
+
+					'control_b4a7254d4g' => array(
+						'type' => 'toggle',
+						'name' => 'allowviewer',
+						'default' => '',
+						'label' => 'Office Viewer',
+						'help' => 'Office Dateien werden über den MS Office365 Viewer im Browser nach Zustimmung zur Datenschutzerklärung angezeigt.',
+						'child_of' => '',
+						'placement' => 'inspector',
+						'width' => '100',
+						'hide_if_not_selected' => 'false',
+						'save_in_meta' => 'false',
+						'save_in_meta_name' => '',
+						'required' => 'false',
+						'checked' => 'false',
+						'alongside_text' => 'MS Office Viewer verwenden',
+						'placeholder' => '',
+						'characters_limit' => '',
+					),
+
 					'control_467a294340' => array(
 						'type' => 'toggle',
 						'name' => 'allowupload',
 						'default' => '',
-						'label' => 'Upload erlaubt',
-						'help' => 'Voraussetzung ist, dass du das Hochladen und bearbeiten von Dateien in dem Nextcloud Ordner aktiviert hast',
+						'label' => 'Upload erlauben',
+						'help' => 'Voraussetzung ist, dass das Hochladen und Bearbeiten im Nextcloud Ordner aktiviert wurde',
 						'child_of' => '',
 						'placement' => 'inspector',
 						'width' => '100',
@@ -194,12 +227,12 @@ class Cloud_Block {
 						'placeholder' => '',
 						'characters_limit' => '',
 					),
-					'control_981996462a' => array(
+					'control_98199f4341' => array(
 						'type' => 'toggle',
-						'name' => 'allowdelete',
+						'name' => 'allowcreatedir',
 						'default' => '',
-						'label' => 'Löschen erlaubt',
-						'help' => 'Voraussetzung ist, dass du das Hochladen und bearbeiten von Dateien in dem Nextcloud Ordner aktiviert hast',
+						'label' => 'Neue Ordner erlauben',
+						'help' => 'Upload muss erlaubt sein',
 						'child_of' => '',
 						'placement' => 'inspector',
 						'width' => '100',
@@ -208,7 +241,25 @@ class Cloud_Block {
 						'save_in_meta_name' => '',
 						'required' => 'false',
 						'checked' => 'false',
-						'alongside_text' => 'Erlaube Löschen von Dateien und Ordnern',
+						'alongside_text' => 'Erstellen von neuen Ordnern erlauben',
+						'placeholder' => '',
+						'characters_limit' => '',
+					),
+					'control_981996462a' => array(
+						'type' => 'toggle',
+						'name' => 'allowdelete',
+						'default' => '',
+						'label' => 'Löschen erlauben',
+						'help' => 'Upload muss erlaubt sein',
+						'child_of' => '',
+						'placement' => 'inspector',
+						'width' => '100',
+						'hide_if_not_selected' => 'false',
+						'save_in_meta' => 'false',
+						'save_in_meta_name' => '',
+						'required' => 'false',
+						'checked' => 'false',
+						'alongside_text' => 'Löschen von Dateien und Ordnern',
 						'placeholder' => '',
 						'characters_limit' => '',
 					),
@@ -217,7 +268,7 @@ class Cloud_Block {
 						'name' => 'onlyloggedin',
 						'default' => '',
 						'label' => 'Login erforderlich',
-						'help' => 'Voraussetzung ist, dass du das Hochladen und bearbeiten von Dateien in dem Nextcloud Ordner aktiviert hast',
+						'help' => 'Nur angemeldete Nutzer sehen die Dateien',
 						'child_of' => '',
 						'placement' => 'inspector',
 						'width' => '100',
@@ -235,7 +286,7 @@ class Cloud_Block {
 						'name' => 'onlyloggedin-upload',
 						'default' => '',
 						'label' => 'Login für Uploads erforderlich',
-						'help' => 'Voraussetzung ist, dass du das Hochladen und bearbeiten von Dateien in dem Nextcloud Ordner aktiviert hast',
+						'help' => 'Upload muss erlaubt sein',
 						'child_of' => '',
 						'placement' => 'inspector',
 						'width' => '100',
@@ -244,7 +295,7 @@ class Cloud_Block {
 						'save_in_meta_name' => '',
 						'required' => 'false',
 						'checked' => 'false',
-						'alongside_text' => 'Login für Bearbeiten erzwingen',
+						'alongside_text' => 'Login für das Bearbeiten erzwingen',
 						'placeholder' => '',
 						'characters_limit' => '',
 					),
@@ -279,8 +330,15 @@ class Cloud_Block {
 				'condition' => array(
 				),
 			) );
+
+
+
+
 	}  // end nextcloud-tree
+
+
 
 	/* ---------------  */
 }
 new Cloud_Block();
+

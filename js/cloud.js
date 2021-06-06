@@ -9,6 +9,8 @@ var rpicloud = {
             }
         }
 
+        console.log('user:'+$('#rpicloud-user').val());
+
         if(username = $('#rpicloud-user').val()){
             $('.cloud-username').val(username);
             $('.toolbar-username').html(username).css({'float':'left'});
@@ -29,6 +31,21 @@ var rpicloud = {
         }
         console.log(true);
         return true;
+    },
+    checkcreatedir: function(id){
+        if(!jQuery('#cloud-createdir-'+id).val()){
+            jQuery('#cloud-createdir-'+id).css('border','2px dashed red');
+
+            console.log('#cloud-createdir-'+id);
+            return false;
+        }else{
+            let v = jQuery('#cloud-createdir-'+id).val();
+            v = v.replace('/','');
+            jQuery('#cloud-createdir-'+id).val(v);
+            console.log(true);
+            return true;
+        }
+
     },
 
     showupload_dialog: function(id){
@@ -53,6 +70,26 @@ var rpicloud = {
 
 
 
+    },
+    showcreatedir_dialog: function(id){
+        $ = jQuery;
+        if(!rpicloud.check_name()){
+            return;
+        }
+        let tb = '#createdir_'+id+'_container';
+        console.log(tb);
+        $(tb).slideToggle(function (){
+            let hdl = $(this)
+                .parent('.rpicloud-container')
+                .find('.rpicloud-handle.createdir span');
+
+            if($(this).css('display') =='none'){
+                hdl.css({'background-color':'#fff','color':'#999'});
+            }else{
+                hdl.css({'background-color':'green','color':'#fff'});
+
+            }
+        });
     },
     togglelog:function (id){
         $ = jQuery;
@@ -92,9 +129,14 @@ var rpicloud = {
 
         id = id.replace('del_','');
 
-        console.info(id);
 
-        let node = $.ui.fancytree.getTree('#'+id).getActiveNode()
+        //console.info(id);
+
+        let node = $.ui.fancytree.getTree('#'+id).getActiveNode();
+        if(!node){
+            return;
+        }
+
         $('#'+ id +'-cloud-del-file').val(node.data.file);
         $('#'+ id +'-cloud-del-nodekey').val($('#'+ id +'-cloud-upload-nodekey').val());
         $('#'+ id +'-cloud-base-dir').val($('#'+ id +'-cloud-upload-dir').val());
@@ -134,6 +176,14 @@ var rpicloud = {
         let tb = elem.find('.rpicloud-toolbar');
         if(tb){
             console.log(tb);
+
+            let btn = elem.find('.rpicloud-handle');
+
+            if( btn.length>0 ){
+                tb.css('display', 'flex');
+            }
+
+
             tb.append(elem.find('.rpicloud-handle'));
         }
 
@@ -149,7 +199,6 @@ var rpicloud = {
 
             rpicloud.toolbar(elem.id);
         })
-
 
         $(".tree").fancytree({
 

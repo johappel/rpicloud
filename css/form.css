@@ -22,20 +22,55 @@ ul.fancytree-container,.cloud_upload{
     /*border: 1px solid #ddd;*/
     border-radius: 3px;
 }
-.rpicloud-toolbar{
+.in-editor-toolbar{
     display: flex;
     background-color: #ddd;
+    background-image: linear-gradient(90deg, #fff, #ddd 70%);
     justify-content: flex-end;
     padding: 0;
     border-radius: 4px 4px 0px 0px;
+    border-bottom: 1px solid #ddd;
+    color: #aaa;
+}
+.in-editor-toolbar .dashicons{
+    background: white;
+    display: block;
+    height: 20px;
+    margin: 1px 2px;
+    border-radius: 3px;
+}
+.rpicloud-toolbar{
+    display: none;
+    background-color: #ddd;
+    background-image: linear-gradient(90deg, #fff, #ddd 70%);
+    justify-content: flex-end;
+    padding: 0;
+    border-radius: 4px 4px 0px 0px;
+    border-bottom: 1px solid #ddd;
 }
 .rpicloud-toolbar .toolbar-username{
-    margin-right: 50px;
+    background-color: #fff;
+    margin: 3px 0px 3px 0px;
+    font-size: 13px;
+    color: #777777;
+    border-radius: 0 3px 3px 0;
+    height: 21px;
+    padding: 0 5px;
+
+}
+.rpicloud-toolbar .dashicons-admin-users{
+    background-color: #fff;
+    margin: 3px 0px 3px 0px;
+    font-size: 20px;
+    color: #aaa;
+    border-radius: 3px 0 0 3px;
+    height: 21px;
 }
 .help-text{
     font-size:12px!important;
     line-height: 14px;
 }
+
 
 .rpicloud-handle span{
     width: 24px;
@@ -47,20 +82,48 @@ ul.fancytree-container,.cloud_upload{
     padding: 2px;
     color: #999;
 }
+
 .rpicloud-handle span:hover{
-    background: #777777 !important;
+    background-color: #777777 !important;
     color: white!important;
 }
 .rpicloud-handle.delete span:hover{
-    background: red!important;
+    background-color: red!important;
 }
 .rpicloud-handle.upload span:hover{
-    background: limegreen!important;
+    background-color: limegreen!important;
 }
+
+.rpicloud-handle {
+    width: 24px;
+    height: 24px;
+}
+/*
+.toolbar-icon{
+    width: 16px;
+    height: 16px;
+    display: block;
+    background-image: url("../fancytree/skin-win8/icons.gif");
+}
+.toolbar-icon.$transkey{
+    background-position: 0 -178px;
+}
+.toolbar-icon.addfolder{
+    background-position: -16px -178px;
+}
+.toolbar-icon.delete{
+    background-position: -32px -178px;
+}
+.toolbar-icon.history{
+    background-position: -47px -178px;
+}
+
+*/
+
 .rpicloud-wrapper{
     margin: 10px;
 }
-.cloud_upload, .cloud_del{
+.cloud_upload, .cloud_del, .cloud_createdir{
     display: none;
     border-bottom: 1px solid #ddd;
     background-color: #fff;
@@ -125,7 +188,8 @@ input[type="text"].cloud-upload-dir {
 .cloud-upload-label {
     position: absolute;
     background: #eee;
-    width: 115px;
+    /*width: 115px;*/
+    min-width: 110px;
     padding: 0 4px;
     color:darkblue;
 }

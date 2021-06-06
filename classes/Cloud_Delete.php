@@ -7,21 +7,23 @@ class Cloud_Delete {
 	static function display_form($atts){
 
 		$atts = array_merge(array(
-			'transkey'=> '',
+			'key'=> '',
 			'tree_id'=>'',
 			'post_id'=>'',
-			'confirm'=>'Möchtest du %name% wirklich löschen?',
+			'startdir'=>'/',
 			),
 			$atts
 		);
 
 		$tree_id = $atts['tree_id'];
-		$transkey = $atts['transkey'];
-		$confirm = $atts['confirm'];
+		$transkey = $atts['key'];
+		$confirm = 'Möchtest du %name% wirklich löschen?';
 		$post_id = $atts['post_id'];
+		$startdir = $atts['startdir'];
 
 		$form = '<a href="#del" class="rpicloud-handle delete" id="del_'.$tree_id.'" onclick="rpicloud.delete(this.id,\''.$confirm.'\')">';
 		$form .= '<span title="Löschen" class="dashicons dashicons-no"></span>';
+		//$form .= '<span title="Löschen" class="toolbar-icon delete"></span>';
 		$form .= '</a>';
 
 		$form .= '<div id="' . $tree_id . '-cloud-confirm-delete-message" class="cloud_del">';
@@ -31,16 +33,18 @@ class Cloud_Delete {
 
 		$form .= '<input name="tree_id" value="'.$tree_id.'" type="hidden">';
 		$form .= '<input name="post_id" value="'.$post_id.'" type="hidden">';
-		$form .= '<input id="' . $tree_id . '-cloud-del-file" name="file" value="" type="hidden">';
-		$form .= '<input class="cloud-username" name="form_user" value="" type="hidden">';
-		$form .= '<input id="' . $tree_id . '-cloud-del-nodekey" name="nodekey" value="" type="hidden">';
+		$form .= '<input type="hidden" id="' . $tree_id . '-cloud-base-startdir" name="startdir" value="'.$startdir.'">';
 		$form.=   wp_nonce_field( 'delete_rpicld_file', 'rpicld_nonce', true, false );
+
+		//filled out on tree selecting
+		$form .= '<input id="' . $tree_id . '-cloud-del-file" name="file" value="" type="hidden">';
+		$form .= '<input id="' . $tree_id . '-cloud-del-nodekey" name="nodekey" value="" type="hidden">';
 		$form .= '<input type="hidden" id="' . $tree_id . '-cloud-base-dir" name="dir" value="">';
-		$form .= '<input type="hidden" id="' . $tree_id . '-cloud-base-startdir" name="startdir" value="">';
+		$form .= '<input class="cloud-username" name="form_user" value="" type="hidden">';
+
 		$form .= '<p  class="cloud-confirm-delete-message"></p>';
 		$form .= '<input type="submit" value="Löschen" class="button button-primary" name="delete_rpicld_file">';
 		$form .= '<input type="button" class="button button-secondary" value="Abbrechen" onclick="jQuery(\'#' . $tree_id . '-cloud-confirm-delete-message\').hide()">';
-
 		$form .= '</form>';
 
 		$form .= '</div>';

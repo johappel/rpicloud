@@ -41,71 +41,74 @@ class Cloud_Upload {
 		return $html;
 	}
 
-	static function display_form($atts, $notallowed=false){
+	static function display_form($atts, $createDir = false){
+
+		$slug =  $createDir? 'createdir':'upload';
 
 		$atts= array_merge(array(
 			'key' => '0',
-			'dir' => '/',
-			'prefix' => 'tree1',
-			'header-label'=> 'Neue Dateien hinzufügen',
-			'folder-label'=> 'Datei in neuen Unterordner kopieren?',
-			'folder-placeholder'=> 'Ordnername oder frei lassen'
-
+			'startdir' => '/',
+			'post_id'=>'',
+			'tree_id' => 'tree1'
 		),$atts);
 
-		$tree_id = $atts['prefix'];
-		$txt_header = $atts['header-label'];
-		$txt_folder = $atts['folder-label'];
-		$txt_placeholder = $atts['folder-placeholder'];
+		$tree_id = $atts['tree_id'];
+		$startdir = $atts['startdir'];
+		$post_id = $atts['post_id'];
+		$transkey = $atts['key'];
+		$txt_header = 'Neue Dateien hinzufügen';
+		$txt_folder = 'Neuen Unterordner erzeugen';
+		$txt_placeholder = 'Ordner Name';
+		$txt_submit = $createDir? esc_html__('Ordner anlegen'):esc_html__('Hochladen');
+		$checker = $createDir? 'createdir':'upload';
+		$iconclass = $createDir? 'plus':'upload';
+
 		$html = '';
+		$html .= '<div cloud-handle-wrapper>';
+		$html .= '<a href="#up" title="'. $txt_header .'" class="rpicloud-handle '.$slug.'" id="upload_'.$tree_id.'" onclick="rpicloud.show'.$slug.'_dialog(\''.$tree_id.'\')"><span title="'.$txt_submit.'" class="dashicons dashicons-'.$iconclass.'"></span></a>';
+		$html .= '</div>';
 
-		if( $notallowed === false ) {
+		$html .= '<div id="'.$slug.'_'.$tree_id.'_container" class="cloud_'.$slug.'"><div class="rpicloud-wrapper">';
 
-			$html .= '<div cloud-handle-wrapper>';
-			$html .= '<a href="#up" title="'. $txt_header .'" class="rpicloud-handle upload" id="upload_'.$tree_id.'" onclick="rpicloud.showupload_dialog(\''.$tree_id.'\')"><span title="Datei hochladen" class="dashicons dashicons-plus"></span></a>';
-			$html .= '</div>';
+		$html .= '<form class="rpicld-form" method="POST" enctype="multipart/form-data" class="cloud_upload" onsubmit="return rpicloud.check'.$checker.'(\''.$tree_id.'\');">';
 
-			$html .= '<div id="upload_'.$tree_id.'_container" class="cloud_upload"><div class="rpicloud-wrapper">';
+		if($createDir === true) {
 
-			$html .= '<form class="rpicld-form" method="POST" enctype="multipart/form-data" class="cloud_upload" onsubmit="return rpicloud.checkupload(\''.$tree_id.'\');">';
+			//New Directory
+			$html .= '<p class="form-field cloud-createdir">';
+			$html .= '<label>' . $txt_folder . '</label>';
+			$html .= '<input type="text" name="newdir" id="cloud-createdir-' . $tree_id . '" class="cloud-upload-dir" value="" placeholder="' . $txt_placeholder . '">';
+			$html .= '</p>';
 
+		}else{
 			//Fileupload
-			$html .= '<p class="form-field" id="cloud-upload-field-'.$tree_id.'">';
-			$html .= '<label for="cloud-upload-file-'.$tree_id.'" class="cloud-upload-file">';
+			$html .= '<p class="form-field" id="cloud-upload-field-' . $tree_id . '">';
+			$html .= '<label for="cloud-upload-file-' . $tree_id . '" class="cloud-upload-file">';
 			$html .= '<span class="cloud-upload-label">Datei wählen</span>';
-			$html .= '<input type="file" id="cloud-upload-file-'.$tree_id.'" size="60" name="rpicld_file" onchange="this.parentNode.parentElement.style.border=\'none\'">';
+			$html .= '<input type="file" id="cloud-upload-file-' . $tree_id . '" size="60" name="rpicld_file" onchange="this.parentNode.parentElement.style.border=\'none\'">';
 			$html .= '</label>';
 			$html .= '</p>';
-
-			$html .= '<p class="form-field">';
-			$html .= '<label>' . $txt_folder . '</label>';
-			$html .= '<input type="text" name="newdir" class="cloud-upload-dir" value="" placeholder="' . $txt_placeholder . '">';
-			$html .= '</p>';
-
 		}
 
-		if($notallowed === false){
-
-			//submit
-			$html .= '<p class="form-field">';
-			$html .=    '<input type="submit" name="submit_rpicld_form" class="button button-primary" value="' . esc_html__( 'Upload' ) . '">';
-			$html .= '</p>';
+		//submit
+		$html .= '<p class="form-field">';
+		$html .=    '<input type="submit" name="submit_rpicld_form" class="button button-primary" value="' . $txt_submit  . '">';
+		$html .= '</p>';
 
 
-		}
 
 
 		//hidden fields
-		$html .= '<input type="hidden" id="' . $tree_id . '-cloud-upload-dir" name="dir" value="">';
-		$html .= '<input type="hidden" id="' . $tree_id . '-cloud-upload-nodekey" name="nodekey" value="">';
+		$html .= '<input type="hidden" id="' . $tree_id . '-cloud-'.$slug.'-dir" name="dir" value="">';
+		$html .= '<input type="hidden" id="' . $tree_id . '-cloud-'.$slug.'-nodekey" name="nodekey" value="">';
 		$html .= '<input type="hidden" name="tree_id" value="'.$tree_id.'">';
-		$html .= '<input id="' . $tree_id . '-cloud-upload-startdir" type="hidden" name="startdir" value="'. $atts['dir'] .'">';
+		$html .= '<input id="' . $tree_id . '-cloud-'.$slug.'-startdir" type="hidden" name="startdir" value="'. $startdir .'">';
 		$html .= '<input type="hidden"  class="cloud-username" name="form_user" value="">';
 
 
 		//hidden fields
-		$html .= '<input type="hidden" name="rpicloud_key" value="'. $atts['key'] .'">';
-		$html .= '<input type="hidden" name="id" value="' . get_the_ID() . '">';
+		$html .= '<input type="hidden" name="rpicloud_key" value="'. $transkey .'">';
+		$html .= '<input type="hidden" name="id" value="' . $post_id . '">';
 		// Output the nonce field
 		$html .= wp_nonce_field( 'upload_rpicld_file', 'rpicld_nonce', true, false );
 		$html .= '<input type="hidden" name="action" value="wp_handle_upload">';
@@ -133,8 +136,8 @@ class Cloud_Upload {
 		}
 
 		// Throws a message if no file is selected
-		if ( ! $_FILES['rpicld_file']['name'] ) {
-			wp_die( esc_html__( 'Please choose a file', 'theme-text-domain' ) );
+		if ( ! $_FILES['rpicld_file']['name'] && ! isset($_POST['newdir']) ) {
+			wp_die( esc_html__( 'empty content', 'theme-text-domain' ) );
 		}
 
 		$username = Cloud_Helper::get_username('Anonymous');
@@ -219,37 +222,39 @@ class Cloud_Upload {
 			$uploaddir .= $create_dir.'/';
 
 
+		}else{
+			$curl = curl_init();
+
+			curl_setopt_array($curl, [
+				CURLOPT_URL => $cfg->get_baseUri() . encodePath($uploaddir .$_FILES['rpicld_file']['name']),
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => "",
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 30,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => "PUT",
+				CURLOPT_POSTFIELDS => $c,
+				CURLOPT_COOKIE => "ocrvzaedddzo=5956e0affcdacc3282111f567c36f5bb; oc_sessionPassphrase=KGdLwwyOekgYXA0dBPBrzdpbtlzb7gjBHZu8cc8es%252BiebBxcGGZkoAH4ItiG89ngsr6UTfFQBE9VdssPfG1uESBBjaqU%252BkC7wOVKqx5SUn5WfO30f21YeENi0u1kPtdx; __Host-nc_sameSiteCookielax=true; __Host-nc_sameSiteCookiestrict=true",
+				CURLOPT_HTTPHEADER => [
+					"Authorization: Basic ". base64_encode($cfg->get_userName().':'.$cfg->get_password())
+				],
+			]);
+
+			$response = curl_exec($curl);
+			$err = curl_error($curl);
+
+			curl_close($curl);
+
+			if ($err) {
+				echo "cURL Error #:" . $err;
+				die();
+			} else {
+				echo $response;
+			}
+
+			unlink($movefile['file']);
 		}
-		$curl = curl_init();
 
-		curl_setopt_array($curl, [
-			CURLOPT_URL => $cfg->get_baseUri() . encodePath($uploaddir .$_FILES['rpicld_file']['name']),
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_ENCODING => "",
-			CURLOPT_MAXREDIRS => 10,
-			CURLOPT_TIMEOUT => 30,
-			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			CURLOPT_CUSTOMREQUEST => "PUT",
-			CURLOPT_POSTFIELDS => $c,
-			CURLOPT_COOKIE => "ocrvzaedddzo=5956e0affcdacc3282111f567c36f5bb; oc_sessionPassphrase=KGdLwwyOekgYXA0dBPBrzdpbtlzb7gjBHZu8cc8es%252BiebBxcGGZkoAH4ItiG89ngsr6UTfFQBE9VdssPfG1uESBBjaqU%252BkC7wOVKqx5SUn5WfO30f21YeENi0u1kPtdx; __Host-nc_sameSiteCookielax=true; __Host-nc_sameSiteCookiestrict=true",
-			CURLOPT_HTTPHEADER => [
-				"Authorization: Basic ". base64_encode($cfg->get_userName().':'.$cfg->get_password())
-			],
-		]);
-
-		$response = curl_exec($curl);
-		$err = curl_error($curl);
-
-		curl_close($curl);
-
-		if ($err) {
-			echo "cURL Error #:" . $err;
-			die();
-		} else {
-			echo $response;
-		}
-
-		unlink($movefile['file']);
 
 		$username = Cloud_Helper::get_username();
 
@@ -259,9 +264,15 @@ class Cloud_Upload {
 		$dirlabel = substr($uploaddir, strlen($_POST['startdir']));
 		if($dirlabel){
 
-			$keyparts = explode('_',$_POST['nodekey']);
-			$key = intval($keyparts[1])+$tree_no;
-			$key = $keyparts[0].'_'.strval($key);
+			if(isset($_POST['nodekey']) && !empty($_POST['nodekey']) ){
+				$keyparts = explode('_',$_POST['nodekey']);
+				$key = intval($keyparts[1])+$tree_no;
+				$key = $keyparts[0].'_'.strval($key);
+			}else{
+				$key = '';
+			}
+
+
 		}else{
 			$key ='';
 		}

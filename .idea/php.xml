@@ -11,6 +11,7 @@
       <path value="$PROJECT_DIR$/vendor/sabre/uri" />
       <path value="$PROJECT_DIR$/vendor/sabre/vobject" />
       <path value="$PROJECT_DIR$/../WordPress" />
+      <path value="$PROJECT_DIR$/../lazy-blocks" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

@@ -58,13 +58,14 @@ class Cloud_File {
 
 		);
 
+
 		if ($this->config->is_mod_rewrite_is_enabled()) {
 
 			$download_url = Cloud_Core::$shorturl. $this->config->get_transkey().'/'.$this->get_short_key() ;
 
 
 			//Link to Office Viewer
-			if(in_array($this->get_type(),$officedocs)){
+			if(in_array($this->get_type(),$officedocs) && $this->config->is_allow_viewer()){
 
 				$download_url = Cloud_Core::$officeurl . base64_encode(urlencode($download_url));
 

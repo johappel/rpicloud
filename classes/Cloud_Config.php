@@ -14,8 +14,10 @@ class Cloud_Config {
 	protected $publicUri                = 'https://cloud.rpi-virtuell.de/s/';
 	protected $allowedExtensions         = 'jpg,png,gif';
 	protected $force_login_to_upload     = false;
-	protected $allow_del                 = true;
+	protected $allow_del                 = false;
+	protected $allow_viewer              = false;
 	protected $allow_upload              = false;
+	protected $allow_createdir              = false;
 	protected $dir                       = "/";
 
 
@@ -42,7 +44,6 @@ class Cloud_Config {
 		$url = $atts['url'];
 		$user = $atts['username'];
 		$passwd = $atts['password'];
-
 		$this->transkey = $trans_key;
 
 
@@ -71,7 +72,10 @@ class Cloud_Config {
 		}
 
 		$this->set_password($passwd);
-
+		$this->set_allow_viewer($atts['allow_viewer'] == 'true' );
+		$this->set_allow_createdir($atts['allow_createfolder'] == 'true' );
+		$this->set_allow_del($atts['allow_delete'] == 'true' );
+		$this->set_allow_upload($atts['upload'] == 'true' );
 		$this->set_allowedExtensions($atts['allowed_extensions']);
 
 
@@ -112,6 +116,12 @@ class Cloud_Config {
 	}
 	public function is_allow_del(){
 		return $this->allow_del;
+	}
+	public function is_allow_createdir(){
+		return $this->allow_createdir;
+	}
+	public function is_allow_viewer(){
+		return $this->allow_viewer;
 	}
 	public function is_allow_upload(){
 		return $this->allow_upload;
@@ -162,14 +172,20 @@ class Cloud_Config {
 	public function set_baseDir($param){
 		$this->dir = $param;
 	}
-	public function set_force_login_to_upload($param){
-		$this->force_login_to_upload = $param;
+	public function set_force_login_to_upload($bool){
+		$this->force_login_to_upload = $bool;
 	}
-	public function set_allow_del($param){
-		$this->allow_del = $param;
+	public function set_allow_del($bool){
+		$this->allow_del = $bool;
 	}
-	public function set_allow_upload($param){
-		$this->allow_upload = $param;
+	public function set_allow_viewer($bool){
+		$this->allow_viewer = $bool;
+	}
+	public function set_allow_createdir($bool){
+		$this->allow_createdir = $bool;
+	}
+	public function set_allow_upload($bool){
+		$this->allow_upload = $bool;
 	}
 	public function set_allowedExtensions($param){
 
@@ -188,7 +204,7 @@ class Cloud_Config {
 	}
 	protected function restore_from_options($key){
 
-		$entrys = (array) get_option('rpicloud');
+		$entrys = (array) Cloud_Config::get_postmeta('rpicloud');
 
 		foreach ($entrys  as $item ) {
 
@@ -202,4 +218,13 @@ class Cloud_Config {
 
 	}
 
+	static function update_postmeta($key, $value){
+		global $post;
+		update_post_meta($post->ID,$key,$value);
+	}
+	static function get_postmeta($key){
+		global $post;
+		$value = get_post_meta($post->ID,$key, true);
+		return $value;
+	}
 }
