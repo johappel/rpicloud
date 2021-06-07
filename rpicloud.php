@@ -8,7 +8,7 @@ Version: 1.0
 Author URI: http://joachim-happel.de
  */
 
-require_once 'vendor/autoload.php';
+require_once 'sabre/autoload.php';
 require_once 'classes/Cloud_Block.php';
 require_once 'classes/Cloud_Core.php';
 require_once 'classes/Cloud_Config.php';
