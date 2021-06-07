@@ -16,8 +16,7 @@ Wordpress Plugin which connects to a public NextCloud (DAV) share and provides a
 * added filterhooks
 
 ### Screenshot
-![grafik](https://user-images.githubusercontent.com/307023/116627108-cef98600-a94c-11eb-8657-819e18fd3db3.png)
-
+![grafik](https://user-images.githubusercontent.com/307023/121055465-9061b180-c7bd-11eb-8fe1-d1befa177de5.png)
 
 ### Installation
 
