@@ -42,7 +42,6 @@ Class Cloud_Core{
 	}
 	static function init(){
 
-
 		//oembedder
 		wp_oembed_add_provider('https://cloud.rpi-virtuell.de/index.php/s/*', self::$pluginurl .'oembed.php', false);
 

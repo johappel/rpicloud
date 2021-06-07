@@ -1,6 +1,5 @@
 <?php
 
-
 use function Sabre\HTTP\encodePath;
 
 class Cloud_Upload {
@@ -159,10 +158,13 @@ class Cloud_Upload {
 		$overrides = array( 'action' => 'wp_handle_upload' );
 
 		$file = $_FILES['rpicld_file'];
+
 		$movefile     = wp_handle_upload( $file,$overrides);
+		if(isset($movefile['error'])){
+			wp_die($movefile['error']);
+		}
 
 		$c = file_get_contents($movefile['file']);
-
 
 		$cfg = new Cloud_Config($_POST['rpicloud_key']);
 
@@ -298,6 +300,14 @@ class Cloud_Upload {
 
 		die();
 	}
-}
 
+	static function allow_myme_types( $mime_types ) {
+		$mime_types['svg'] = 'image/svg+xml';     // Adding .svg extension
+		$mime_types['json'] = 'application/json'; // Adding .json extension
+		$mime_types['txt'] = 'text/plain'; // Adding .json extension
+
+		return $mime_types;
+	}
+
+}
 

@@ -7,7 +7,7 @@ class Cloud_Share {
 
 	function __construct() {
 
-		$this->user = base64_encode('nextcloud:(Z%inU6Pn0nxO&pcJ6fCiu$d');
+		$this->user = base64_encode('nextclouduser:password');
 	}
 
 	function add_share($path = 'Documents/Test', $shareType = 3, $publicUpload = 'true', $password=''){

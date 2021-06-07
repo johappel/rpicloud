@@ -33,6 +33,6 @@ define('RPICLOUD', 'rpi-virtuell Nextcloud Plugin');
 add_action('init', array('Cloud_Core','init'));
 add_action( 'wp', array('Cloud_Core','dispatch') );
 add_filter('query_vars',  array('Cloud_Core','add_query_vars') );
-
+add_filter( 'upload_mimes', array('Cloud_Upload','allow_myme_types'), 999, 1 );
 
 
