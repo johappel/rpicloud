@@ -1,11 +1,12 @@
 <?php
 /*
-Plugin Name: rpi Cloud Client
-Plugin URI: http:///
-Description: Gutenberg Block, der über webdav einen öffentlich geteilten Ordner aus der Nextcloud innerhalb einer Seite darstellt. Alternativ ist auch die Verwendung über shortcode etwa in widgets möglich-
+Plugin Name: rpiCloud Block
+Plugin URI: https://github.com/johappel/rpicloud
+Über einen Gutenberg Block oder einen Shortcode lässt sich eine minimalistische Webclient zu  einer beliebigen Nextcloud Instanz darstellen. Unterstützt werden veröffentliche (geteilte) Ordner, mit und ohne Passortschutz. Über eine Baumansicht kann der Besucher zu beliebigen Dateien navigieren und diese direkt im Browser aufrufen. Auch HTML Seiten!! Eine minimalistisches Auch das Bearbeiten des Ordnerinhaltes kann erlaubt werden.
+A minimalist web client to any Nextcloud instance can be displayed via a Gutenberg block or a shortcode. Supported are published (shared) folders, with and without password protection. Via a tree view, the visitor can navigate to any file and access it directly in the browser. Also HTML pages! A minimalist editing of the folder content can also be allowed.
 Author: Joachim Happel
 Version: 1.0
-Author URI: http://joachim-happel.de
+Author URI: https://github.com/johappel
  */
 
 require_once 'sabre/autoload.php';

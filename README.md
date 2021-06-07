@@ -13,7 +13,7 @@ Wordpress Plugin which connects to a public NextCloud (DAV) share and provides a
 * display office files in Browser
 * add via Gutenberg Block
 * add via shortcode if Blockeditor is disabled
-* added filterhooks
+* filterhooks
 
 ### Screenshot
 ![grafik](https://user-images.githubusercontent.com/307023/121055465-9061b180-c7bd-11eb-8fe1-d1befa177de5.png)
@@ -44,6 +44,7 @@ This project is licensed under the GNU GPL License - see the [LICENSE](LICENSE) 
 
 ### ToDo
 * [x] add multisite support
+* [ ] documentation
 * [ ] add media insertion from tree selection 
 * [ ] add autocreate shared folders for groups
 * [ ] buddypress support

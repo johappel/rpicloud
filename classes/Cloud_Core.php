@@ -135,10 +135,10 @@ Class Cloud_Core{
 		}
 		$tree_id = 'tree'.$post->nc;
 
-		//read some params from sortcode
+		//read params from sortcode
 
 		$atts = shortcode_atts( array(
-			'url' => 'https://cloud.rpi-virtuell.de/index.php/s/mmoyLdxnLXLQ34W',
+			'url' => '',
 			'password' => '',
 			'username' => '',
 			'dir' => '/',
@@ -146,7 +146,6 @@ Class Cloud_Core{
 			'allow_delete' => 'false',
 			'allow_createdir' => 'false',
 			'allow_viewer' => 'false',
-			'confirm_delete'=> 'Möchtest du %name% wirklich löschen?',
 			'allowed_extensions' => 'jpg,jpeg,png',
 			'login-to-upload' => 'false',
 			'only-login' => 'false'
@@ -161,7 +160,6 @@ Class Cloud_Core{
 		$atts['allow_viewer'] = ($atts['allow_viewer']==1 || $atts['allow_viewer']=='true')?'true':'false';
 		$atts['login-to-upload'] = ($atts['login-to-upload']==1 || $atts['login-to-upload']=='true')?'true':'false';
 
-		//var_dump($atts);
 
 		if(!is_user_logged_in()){
 
