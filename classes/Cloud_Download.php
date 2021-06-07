@@ -4,15 +4,15 @@
 use function Sabre\HTTP\encodePath;
 
 class Cloud_Download {
-	public static function display(){
+	public static function display($transkey,$file){
 
 		# get path
-		$cfg = Cloud_Config::get_Instance();
+		$cfg = Cloud_Config::get_Instance($transkey);
 
 
 		$client = $cfg->get_client();
 
-		$file =  $cfg->get_uriPrefix().urldecode($_GET['file']);
+		$file =  $cfg->get_uriPrefix().urldecode($file);
 
 		$file = encodePath($file);
 

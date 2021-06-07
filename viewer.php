@@ -1,8 +1,9 @@
 <?php
+    if(! defined('RPICLOUD')){
+        die();
+    }
 
-    $url = base64_decode($_GET['url']);
-    //var_dump($url);  die();
-    $src = 'https://view.officeapps.live.com/op/embed.aspx?src='.$url;
+    $src = 'https://view.officeapps.live.com/op/embed.aspx?src='.Cloud_Core::$officdoc;
 
     if(isset($_COOKIE['rpi_cloud_viewer']) || isset($_GET['rpi_cloud_viewer'])){
 
@@ -15,7 +16,7 @@
 
 		$html =   '<div class="view">';
 		$html .=   '<h1>Download</h1>';
-	    $html .=  '<p>'. substr(strrchr(urldecode($url),'/'),1).'</p><p><a class="button" href="'.urldecode($url).'">Dokument herunterladen</a></p>';
+	    $html .=  '<p>'. substr(strrchr(urldecode(Cloud_Core::$officdoc),'/'),1).'</p><p><a class="button" href="'.Cloud_Core::$officdoc.'">Dokument herunterladen</a></p>';
 	    $html .=  '<p><strong>Oder direkt im Microsoft Viewer anzeigen:</strong></p>';
 	    $html .=  '<form>';
 	    $html .=  '<div class="privacy">Ich akzeptiere die Microsoft <a href="https://privacy.microsoft.com/de-de/privacystatement">Datenschutzbestimmungen</a></div>';

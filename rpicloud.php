@@ -7,6 +7,7 @@ Author: Joachim Happel
 Version: 1.0
 Author URI: http://joachim-happel.de
  */
+
 require_once 'vendor/autoload.php';
 require_once 'classes/Cloud_Block.php';
 require_once 'classes/Cloud_Core.php';
@@ -27,5 +28,11 @@ Cloud_Core::$frameurl = home_url().'/rpicloud/';
 Cloud_Core::$officeurl = home_url().'/cloudview/';
 Cloud_Core::$wpdir = ABSPATH;
 
+define('RPICLOUD', 'rpi-virtuell Nextcloud Plugin');
 
-add_action('init', array('Cloud_Core','init'),90);
+add_action('init', array('Cloud_Core','init'));
+add_action( 'wp', array('Cloud_Core','dispatch') );
+add_filter('query_vars',  array('Cloud_Core','add_query_vars') );
+
+
+

@@ -9,8 +9,37 @@ Class Cloud_Core{
 	static $wpdir;
 	static $officeurl;
 	static $frameurl;
+	static $officdoc;
 
 
+	static function dispatch( $query ){
+
+		$action = get_query_var('rpi_action', false);
+
+		switch($action){
+			case'rpicloud_download';
+				$trans_key = get_query_var('rpicloud_key');
+				$file = get_query_var('file');
+				Cloud_Download::display($trans_key, $file);
+			break;
+			case'rpicloud_viewer';
+
+				Cloud_Core::$officdoc = Cloud_Core::$shorturl.get_query_var('url');
+				include_once (Cloud_Core::$plugindir.'viewer.php');
+				die();
+			break;
+			default:
+
+		}
+	}
+
+	static function add_query_vars($vars){
+
+		array_push($vars, 'rpi_action','rpicloud_key','file','url');
+
+		return $vars;
+
+	}
 	static function init(){
 
 
@@ -34,11 +63,25 @@ Class Cloud_Core{
 		wp_enqueue_script('cloudframe', self::$pluginurl.'js/cloudframe.js');
 		wp_enqueue_style( 'dashicons' );
 
-		$rel_pluginurl =substr(str_replace(home_url(),'',self::$pluginurl),1);
-		add_rewrite_rule( '^cloud/([^/]*)/(.*)$', $rel_pluginurl.'download.php?rpicloud_key=$1&file=$2', 'bottom' );
-		add_rewrite_rule( '^cloudview/([^/]*)$', $rel_pluginurl.'viewer.php?url=$1', 'bottom' );
 
-		//rpicloud page generieren
+		add_rewrite_rule( 'cloud/([^/]+)/(.*)$', 'index.php?rpi_action=rpicloud_download&rpicloud_key=$matches[1]&file=$matches[2]', 'top');
+		add_rewrite_rule( 'cloudview/(.*)/?',  'index.php?rpi_action=rpicloud_viewer&url=$matches[1]', 'top' );
+
+		if(is_admin()){
+			flush_rewrite_rules(true);
+		}
+
+		//$rel_pluginurl =substr(str_replace(get_site_url( 1 ),'/',self::$pluginurl),1);
+		//$rel_pluginurl =substr(str_replace(site_url(),'',self::$pluginurl),1);
+		//var_dump($rel_pluginurl.'download.php');die();
+		//add_rewrite_rule( '([_0-9a-zA-Z-]+/)?cloud/([^/]*)/(.*)', '$matches[1]'.$rel_pluginurl.'download.php?rpicloud_key=$matches[2]&file=$matches[3]', 'bottom' );
+		//add_rewrite_rule( 'cloud/([^/]+)/(.*)$', $rel_pluginurl.'download.php?rpicloud_key=$matches[1]&file=$matches[2]', 'bottom' );
+		//add_rewrite_rule( '^([_0-9a-zA-Z-]+/)?cloudview/([^/]*)$', '$matches[1]'.$rel_pluginurl.'viewer.php?url=$matches[2]', 'bottom' );
+
+		//var_dump($rel_pluginurl);die();
+
+		//add_rewrite_rule( 'cloud/([^/]+)/(.*)$', 'index.php?action=rpicloud_download&rpicloud_key=$matches[1]&file=$matches[2]', 'top');
+
 		$args = array(
 			'name'   => 'rpicloud',
 			'post_type'   => 'page',

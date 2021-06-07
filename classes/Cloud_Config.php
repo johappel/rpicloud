@@ -73,7 +73,7 @@ class Cloud_Config {
 
 		$this->set_password($passwd);
 		$this->set_allow_viewer($atts['allow_viewer'] == 'true' );
-		$this->set_allow_createdir($atts['allow_createfolder'] == 'true' );
+		$this->set_allow_createdir($atts['allow_createdir'] == 'true' );
 		$this->set_allow_del($atts['allow_delete'] == 'true' );
 		$this->set_allow_upload($atts['upload'] == 'true' );
 		$this->set_allowedExtensions($atts['allowed_extensions']);
