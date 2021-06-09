@@ -70,17 +70,6 @@ Class Cloud_Core{
 			flush_rewrite_rules(true);
 		}
 
-		//$rel_pluginurl =substr(str_replace(get_site_url( 1 ),'/',self::$pluginurl),1);
-		//$rel_pluginurl =substr(str_replace(site_url(),'',self::$pluginurl),1);
-		//var_dump($rel_pluginurl.'download.php');die();
-		//add_rewrite_rule( '([_0-9a-zA-Z-]+/)?cloud/([^/]*)/(.*)', '$matches[1]'.$rel_pluginurl.'download.php?rpicloud_key=$matches[2]&file=$matches[3]', 'bottom' );
-		//add_rewrite_rule( 'cloud/([^/]+)/(.*)$', $rel_pluginurl.'download.php?rpicloud_key=$matches[1]&file=$matches[2]', 'bottom' );
-		//add_rewrite_rule( '^([_0-9a-zA-Z-]+/)?cloudview/([^/]*)$', '$matches[1]'.$rel_pluginurl.'viewer.php?url=$matches[2]', 'bottom' );
-
-		//var_dump($rel_pluginurl);die();
-
-		//add_rewrite_rule( 'cloud/([^/]+)/(.*)$', 'index.php?action=rpicloud_download&rpicloud_key=$matches[1]&file=$matches[2]', 'top');
-
 		$args = array(
 			'name'   => 'rpicloud',
 			'post_type'   => 'page',

@@ -36,4 +36,13 @@ add_action( 'wp', array('Cloud_Core','dispatch') );
 add_filter('query_vars',  array('Cloud_Core','add_query_vars') );
 add_filter( 'upload_mimes', array('Cloud_Upload','allow_myme_types'), 999, 1 );
 
+$depended = array(
+	array(
+		'name' => 'lazy-blocks',
+		'path' => 'https://github.com/nk-crew/lazy-blocks/archive/refs/heads/master.zip',
+		'install' => 'lazy-blocks/lazy-blocks.php',
+		'activate' =>false
+	)
+);
 
+register_activation_hook( __FILE__, Cloud_Helper::install_plugins($depended) );
