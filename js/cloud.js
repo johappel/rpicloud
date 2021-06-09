@@ -334,9 +334,9 @@ var rpicloud = {
 jQuery(document).ready(function($){
     setTimeout(function (){
         rpicloud.render($);
-    },500);
-
+    },1);
 });
+/*
 
 const ___dedect__wpLoadBlockEditor_id = setInterval(function()
 {
@@ -367,3 +367,4 @@ const ___dedect__wpLoadBlockEditor_id = setInterval(function()
     console.log('detecting...');
 
 }, 1000);
+*/

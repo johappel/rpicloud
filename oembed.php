@@ -9,17 +9,16 @@ if(
 
 	$home = 'https://' . $_SERVER['HTTP_HOST'] .'/rpicloud/?url='.$url;
 
-	$html = '<iframe frameBorder="0" width="100%" height="100" src="'.$home.'"></iframe>';
-	$html .= '<script src="/wp-content/plugins/rpicloud/js/cloudframe.js"></script>';
+	$html = '<iframe id="rpicloud-oembed-frame" frameBorder="0" width="100%" height="150" src="'.$home.'"></iframe><script>iFrameResize();</script>';
 
 	$json = json_encode($html);
 
 	?>
 	{
 	"version": "1.0",
-	"type": "rich",
+	"type": "video",
     "width":"100%",
-    "height":"100",
+    "height":"150",
     "title": "rpicloud",
 	"thumbnail_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Nextcloud_Logo.svg/320px-Nextcloud_Logo.svg.png",
 	"provider_name": "rpi-virtuell",

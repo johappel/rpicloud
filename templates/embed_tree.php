@@ -46,8 +46,9 @@ if(empty(str_replace(':','',$url))){
 		<?php echo $html; ?>
         <script type="text/javascript" src="<?php echo plugin_dir_url(dirname(__FILE__));?>js/cloudframe.content.js"></script>
         <?php wp_print_footer_scripts(); ?>
-        <script>if(parent != window){
-            parent.jQuery('iframe').iFrameResize();
+        <script>if(parent != window && parent.jQuery){
+                parent.jQuery('iframe').iFrameResize();
+
         }</script>
 	</body>
 </html>

@@ -36,4 +36,11 @@ add_action( 'wp', array('Cloud_Core','dispatch') );
 add_filter('query_vars',  array('Cloud_Core','add_query_vars') );
 add_filter( 'upload_mimes', array('Cloud_Upload','allow_myme_types'), 999, 1 );
 
-register_activation_hook( __FILE__, 'Cloud_Helper' ,'install_plugins' );
+register_activation_hook( __FILE__, ['Cloud_Helper' ,'install_plugins'] );
+
+function wrap_oembed_dataparse($return, $data, $url) {
+
+	return '<div class="embed-responsive ' . $mod . '">' . $return . '</div>';
+}
+
+add_filter( 'oembed_dataparse', 'wrap_oembed_dataparse', 99, 4 );
