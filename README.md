@@ -32,11 +32,13 @@ Wordpress Plugin which connects to a public NextCloud (DAV) share and provides a
 ### Built With
 
 * [WordPress](https://github.com/WordPress/WordPress)
-* [Composer](https://github.com/composer/composer) - Dependency Manager for PHP
 * [sabre/dav](http://sabre.io) - sabre/dav is a CalDAV, CardDAV and WebDAV framework for PHP
 * [fancytree](https://github.com/mar10/fancytree) JavaScript tree view / tree grid plugin
 * [parsedown](https://github.com/erusev/parsedown) Markdown Parser in PHP
-* [lazy blocks](https://github.com/nk-crew/lazy-blocks) Gutenberg blocks visual constructor
+
+### Dependencies 
+need to be installed:
+* [lazy blocks](https://github.com/nk-crew/lazy-blocks) Gutenberg blocks visual constructor 
 
 ## License
 
