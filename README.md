@@ -16,7 +16,8 @@ Wordpress Plugin which connects to a public NextCloud (DAV) share and provides a
 * filterhooks
 
 ### Screenshot
-![grafik](https://user-images.githubusercontent.com/307023/121055465-9061b180-c7bd-11eb-8fe1-d1befa177de5.png)
+![grafik](https://user-images.githubusercontent.com/307023/121306807-919af780-c8ff-11eb-8cf1-c127bd1528ed.png)
+
 
 ### Installation
 
@@ -32,11 +33,13 @@ Wordpress Plugin which connects to a public NextCloud (DAV) share and provides a
 ### Built With
 
 * [WordPress](https://github.com/WordPress/WordPress)
-* [Composer](https://github.com/composer/composer) - Dependency Manager for PHP
 * [sabre/dav](http://sabre.io) - sabre/dav is a CalDAV, CardDAV and WebDAV framework for PHP
 * [fancytree](https://github.com/mar10/fancytree) JavaScript tree view / tree grid plugin
 * [parsedown](https://github.com/erusev/parsedown) Markdown Parser in PHP
-* [lazy blocks](https://github.com/nk-crew/lazy-blocks) Gutenberg blocks visual constructor
+
+### Dependencies 
+need to be installed:
+* [lazy blocks](https://github.com/nk-crew/lazy-blocks) Gutenberg blocks visual constructor 
 
 ## License
 
