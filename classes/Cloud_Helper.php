@@ -157,15 +157,20 @@ class Cloud_Helper {
 
 	/**
 	 * install depencies
-	 * @param $plugins array
-	 *
-	 * $plugins = array(
-	 * 	  array('name' => 'lazy-blocks', 'path' => 'https://github.com/nk-crew/lazy-blocks/archive/refs/heads/master.zip', 'install' => 'lazy-blocks/lazy-blocks.php', 'activate' =>false),
-	 * );
 	 */
 
-	static function install_plugins($plugins)
+	static function install_plugins()
 	{
+		$plugins = array(
+			array(
+				'name' => 'lazy-blocks',
+				'path' => 'https://github.com/nk-crew/lazy-blocks/archive/refs/heads/master.zip',
+				'install' => 'lazy-blocks/lazy-blocks.php',
+				'activate' =>false
+			)
+		);
+
+
 		$args = array(
 			'path' => ABSPATH.'wp-content/plugins/',
 			'preserve_zip' => false
