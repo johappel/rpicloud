@@ -62,8 +62,20 @@ class Cloud_Download {
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Length: ' . $response['headers']['content-length'][0]);
 		header('Accept-Ranges: bytes');
-		echo $response['body'];
+
+		if($response['headers']['content-length'][0]>=173741824){
+			$tmpfile = '/tmp/'.Cloud_Helper::struuid();
+			file_put_contents($tmpfile,$response['body'] );
+			self::stream($tmpfile);
+			unlink($tmpfile);
+
+		}else{
+			echo $response['body'];
+
+		}
+
 		die();
+
 	}
 
 	static function markdown($response,$file){
@@ -100,4 +112,34 @@ class Cloud_Download {
 		die();
 
 	}
+
+
+	static function stream($filename, $retbytes = TRUE) {
+		$cnt    = 0;
+		$handle = fopen($filename, 'rb');
+
+		if ($handle === false) {
+			return false;
+		}
+
+		while (!feof($handle)) {
+			$buffer = fread($handle, 1024*1024);
+			echo $buffer;
+			ob_flush();
+			flush();
+
+			if ($retbytes) {
+				$cnt += strlen($buffer);
+			}
+		}
+
+		$status = fclose($handle);
+
+		if ($retbytes && $status) {
+			return $cnt; // return num. bytes delivered like readfile() does.
+		}
+
+		return $status;
+	}
+
 }

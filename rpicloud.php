@@ -2,12 +2,11 @@
 /*
 Plugin Name: rpiCloud Block
 Plugin URI: https://github.com/johappel/rpicloud
-Über einen Gutenberg Block oder einen Shortcode lässt sich eine minimalistische Webclient zu  einer beliebigen Nextcloud Instanz darstellen. Unterstützt werden veröffentliche (geteilte) Ordner, mit und ohne Passortschutz. Über eine Baumansicht kann der Besucher zu beliebigen Dateien navigieren und diese direkt im Browser aufrufen. Auch HTML Seiten!! Eine minimalistisches Auch das Bearbeiten des Ordnerinhaltes kann erlaubt werden.
-A minimalist web client to any Nextcloud instance can be displayed via a Gutenberg block or a shortcode. Supported are published (shared) folders, with and without password protection. Via a tree view, the visitor can navigate to any file and access it directly in the browser. Also HTML pages! A minimalist editing of the folder content can also be allowed.
+Description: A minimalist webdav client to any Nextcloud instance can be displayed via a Gutenberg block or a shortcode. Supported are published (shared) folders, with and without password protection. Via a tree view, the visitor can navigate to any file and access it directly in the browser. Also HTML pages! A minimalist editing of the folder content can also be allowed.
 Author: Joachim Happel
 Version: 1.0
 Author URI: https://github.com/johappel
- */
+*/
 
 require_once 'sabre/autoload.php';
 require_once 'classes/Cloud_Block.php';
@@ -38,9 +37,4 @@ add_filter( 'upload_mimes', array('Cloud_Upload','allow_myme_types'), 999, 1 );
 
 register_activation_hook( __FILE__, ['Cloud_Helper' ,'install_plugins'] );
 
-function wrap_oembed_dataparse($return, $data, $url) {
 
-	return '<div class="embed-responsive ' . $mod . '">' . $return . '</div>';
-}
-
-add_filter( 'oembed_dataparse', 'wrap_oembed_dataparse', 99, 4 );
