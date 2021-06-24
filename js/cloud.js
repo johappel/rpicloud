@@ -214,7 +214,9 @@ var rpicloud = {
                 }
                 if( node.data.href ){
                     // Use <a> href and target attributes to load the content:
-                    node.setTitle('<a href="' + node.data.href + '">'+node.title+'</a>');
+                    node.data.display = node.data.href;
+                    node.setTitle('<a href="' + node.data.href.replace('cloudview', 'cloud') + '">'+node.title+'</a>');
+
 
                 }
             },
@@ -236,7 +238,7 @@ var rpicloud = {
                             if (node && !node.expanded){
                                 node.toggleExpanded();
                             }
-
+                            $(".tree a").click(function (e){e.preventDefault();});
 
                         }
                     }
@@ -266,7 +268,7 @@ var rpicloud = {
                     var node = data.node;
                     if( node.data.href){
                         // Open target
-                        location.href = node.data.href;
+                        location.href = node.data.display ;
 
                     }else{
                         node.toggleExpanded();
@@ -275,15 +277,26 @@ var rpicloud = {
                 }
 
             },
-            dblclick: function(event, data) {
+
+            click: function(event, data) {
                 var node = data.node;
                 // download/display on dbl click
-                if( node.data.href ){
+                if( data.node.isActive() ){
                     // Open target
-                    location.href = node.data.href;
+                    if( node.data.href ){
+                        if(event.ctrlKey){
+                            window.open(node.data.display);
+                        }else if(event.shiftKey){
+                            window.open(node.data.display,'_blank');
+                        }else{
+                            location.href = node.data.display ;
+                        }
+                    }
+                    return false;
                 }
 
             },
+
             expand:function(event, data) {
                 var node = data.node;
                 console.log(basehash + node.key);
@@ -298,7 +311,8 @@ var rpicloud = {
                 if( node.data.href ){
 
                     //console.dir(node.parent.key);
-                    $('#'+ event.target.id +'-cloud-upload-nodekey').val(basehash + node.parent.key)
+                    $('#'+ event.target.id +'-cloud-upload-nodekey').val(basehash + node.parent.key);
+
                     // Open target
                     // Use <a> href and target attributes to load the content:
                     //location.href = node.data.href;
@@ -336,35 +350,3 @@ jQuery(document).ready(function($){
         rpicloud.render($);
     },1);
 });
-/*
-
-const ___dedect__wpLoadBlockEditor_id = setInterval(function()
-{
-    if(!window.___dedect__wpLoadBlockEditor)
-        window.___dedect__wpLoadBlockEditor =0;
-
-    if ( window._wpLoadBlockEditor ) {
-        window._wpLoadBlockEditor.then( function() {
-            console.log( 'hooray!' );
-            clearInterval(___dedect__wpLoadBlockEditor_id);
-            setTimeout(function (){
-                //rpicloud.render(jQuery);
-
-                jQuery(".tree").fancytree();
-                iFrameResize();
-
-            },1000)
-
-        } )
-    }
-
-    window.___dedect__wpLoadBlockEditor ++
-
-    if(window.___dedect__wpLoadBlockEditor > 3 ){
-        clearInterval(___dedect__wpLoadBlockEditor_id);
-    }
-
-    console.log('detecting...');
-
-}, 1000);
-*/

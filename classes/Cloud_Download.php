@@ -62,18 +62,8 @@ class Cloud_Download {
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Length: ' . $response['headers']['content-length'][0]);
 		header('Accept-Ranges: bytes');
-
-		if($response['headers']['content-length'][0]>=173741824){
-			$tmpfile = '/tmp/'.Cloud_Helper::struuid();
-			file_put_contents($tmpfile,$response['body'] );
-			self::stream($tmpfile);
-			unlink($tmpfile);
-
-		}else{
-			echo $response['body'];
-
-		}
-
+		ob_end_clean();
+		echo $response['body'];
 		die();
 
 	}
@@ -88,7 +78,7 @@ class Cloud_Download {
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Length: ' . $response['headers']['content-length'][0]);
 		header('Accept-Ranges: bytes');
-
+		ob_end_clean();
 		echo '<html><head><style>*{font-family:Arial} body{margin:2%}</style><title>'.$filename.'</title></head><body>';
 		$Parsedown = new Parsedown();
 		echo $Parsedown->text($response['body']);
@@ -107,39 +97,13 @@ class Cloud_Download {
 		//header('Content-Transfer-Encoding: binary');
 		header('Content-Length: text/html;charset=UTF-8');
 		header('Accept-Ranges: bytes');
-
+		ob_end_clean();
 		echo $response['body'];
 		die();
 
 	}
 
 
-	static function stream($filename, $retbytes = TRUE) {
-		$cnt    = 0;
-		$handle = fopen($filename, 'rb');
 
-		if ($handle === false) {
-			return false;
-		}
-
-		while (!feof($handle)) {
-			$buffer = fread($handle, 1024*1024);
-			echo $buffer;
-			ob_flush();
-			flush();
-
-			if ($retbytes) {
-				$cnt += strlen($buffer);
-			}
-		}
-
-		$status = fclose($handle);
-
-		if ($retbytes && $status) {
-			return $cnt; // return num. bytes delivered like readfile() does.
-		}
-
-		return $status;
-	}
 
 }

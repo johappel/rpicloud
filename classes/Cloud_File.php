@@ -57,14 +57,35 @@ class Cloud_File {
 			'application/vnd.visio',
 
 		);
+		$videos = array(
 
+			'video/mp4',
+			'video/ogg',
+
+		);
+		$audios = array(
+
+			'audio/mpeg',
+			'audio/ogg',
+
+		);
 
 		if ($this->config->is_mod_rewrite_is_enabled()) {
 
 
 
 			//Link to Office Viewer
-			if(in_array($this->get_type(),$officedocs) && $this->config->is_allow_viewer()){
+			if(in_array($this->get_type(),$videos)){
+
+				$download_url =$this->config->get_transkey().'/'.$this->get_short_key() ;
+				$download_url = Cloud_Core::$officeurl . $download_url.'?rpi_cloud_video='.$this->get_type();
+
+			}elseif(in_array($this->get_type(),$audios)){
+
+				$download_url =$this->config->get_transkey().'/'.$this->get_short_key() ;
+				$download_url = Cloud_Core::$officeurl . $download_url.'?rpi_cloud_audio='.$this->get_type();
+
+			}elseif(in_array($this->get_type(),$officedocs) && $this->config->is_allow_viewer()){
 
 				$download_url =$this->config->get_transkey().'/'.$this->get_short_key() ;
 

@@ -2,17 +2,35 @@
     if(! defined('RPICLOUD')){
         die();
     }
+    if(isset($_GET['rpi_cloud_video'])){
 
-    $src = 'https://view.officeapps.live.com/op/embed.aspx?src='.Cloud_Core::$officdoc;
+	    $html = '<video width="100%" height="100%" controls id="video" style="background-color: #444">
+                    <source  src="'.Cloud_Core::$officdoc.'" type="'.$_GET['rpi_cloud_video'].'">
+                </video>';
 
-    if(isset($_COOKIE['rpi_cloud_viewer']) || isset($_GET['rpi_cloud_viewer'])){
+    }elseif(isset($_GET['rpi_cloud_audio'])){
+
+	    $html = '<div style="max-width: 500px; margin-left: auto; margin-right: auto; margin-bottom: 20%;margin-top: 20%;">
+                <p style="text-align: center">'.substr(urldecode(strrchr(Cloud_Core::$officdoc,'/')),1).'</a></p>
+                <audio controls autoplay style="width: 500px">
+                    <source  src="'.Cloud_Core::$officdoc.'" type="'.$_GET['rpi_cloud_video'].'">
+                </audio>
+                <p style="text-align: center"><a href="'.Cloud_Core::$officdoc.'?download">Download</a></p>
+                </div>';
+
+
+    }elseif(isset($_COOKIE['rpi_cloud_viewer']) || isset($_GET['rpi_cloud_viewer'])){
+
+        $src = 'https://view.officeapps.live.com/op/embed.aspx?src='.Cloud_Core::$officdoc;
 
 	    setcookie('rpi_cloud_viewer',"1",time()+(60*60*24*30));
 
     	$html = '<iframe id="viewer" scrolling="none" frameborder="0" class="fullscreen" src="'.$src.'"></iframe>';
 
+
     }else{
-		$uri = $_SERVER['REQUEST_URI'].'?rpi_cloud_viewer=1' ;
+
+        $uri = $_SERVER['REQUEST_URI'].'?rpi_cloud_viewer=1' ;
 
 		$html =   '<div class="view">';
 		$html .=   '<h1>Download</h1>';
@@ -34,6 +52,7 @@
 		<style>
 			html,body {
 				height: 100%;
+                background-color: #777777;
 			}
 			body{
 				margin: 0;

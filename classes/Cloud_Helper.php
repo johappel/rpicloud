@@ -199,4 +199,14 @@ class Cloud_Helper {
 			return false;
 	}
 
+	/**
+	 * @todo Dateien aus der der NC über MediaLibrary einfügen
+	 */
+	static function addTreeToMediaController(){
+
+		//https://ibenic.com/extending-wordpress-media-uploader-custom-tab
+		//https://atimmer.github.io/wordpress-jsdoc/wp.media.view.MediaFrame.Select.html
+
+	}
+
 }
