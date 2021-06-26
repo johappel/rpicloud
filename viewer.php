@@ -4,7 +4,7 @@
     }
     if(isset($_GET['rpi_cloud_video'])){
 
-	    $html = '<video width="100%" height="100%" controls id="video" style="background-color: #444">
+	    $html = '<video preload="metadata" width="100%" height="100%" controls id="video" style="background-color: #444">
                     <source  src="'.Cloud_Core::$officdoc.'" type="'.$_GET['rpi_cloud_video'].'">
                 </video>';
 

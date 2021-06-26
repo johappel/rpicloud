@@ -220,11 +220,30 @@ class Cloud_Config {
 
 	static function update_postmeta($key, $value){
 		global $post;
-		update_post_meta($post->ID,$key,$value);
+		if($post){
+			update_post_meta($post->ID,$key,$value);
+		}else{
+
+			$option = get_option('rpicloud');
+			if(!isset($option['cfgs'])){
+				$option['cfgs'] = array();
+			}
+			$option['cfgs'][$key]=$value;
+			update_option('rpicloud',$option);
+		}
+
 	}
 	static function get_postmeta($key){
 		global $post;
-		$value = get_post_meta($post->ID,$key, true);
+		$value = false;
+		if($post) {
+			$value = get_post_meta( $post->ID, $key, true );
+		}else{
+			$option = get_option('rpicloud');
+			if(isset($option['cfgs'])){
+				$value = isset( $option['cfgs'][$key] )? $option['cfgs'][$key] : false;
+			}
+		}
 		return $value;
 	}
 }

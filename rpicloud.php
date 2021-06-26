@@ -4,7 +4,7 @@ Plugin Name: rpiCloud Block
 Plugin URI: https://github.com/johappel/rpicloud
 Description: A minimalist webdav client to any Nextcloud instance can be displayed via a Gutenberg block or a shortcode. Supported are published (shared) folders, with and without password protection. Via a tree view, the visitor can navigate to any file and access it directly in the browser. Also HTML pages! A minimalist editing of the folder content can also be allowed.
 Author: Joachim Happel
-Version: 1.2
+Version: 1.3
 Author URI: https://github.com/johappel
 */
 

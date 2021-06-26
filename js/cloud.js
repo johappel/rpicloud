@@ -215,7 +215,7 @@ var rpicloud = {
                 if( node.data.href ){
                     // Use <a> href and target attributes to load the content:
                     node.data.display = node.data.href;
-                    node.setTitle('<a href="' + node.data.href.replace('cloudview', 'cloud') + '">'+node.title+'</a>');
+                    node.setTitle('<a href="' + node.data.href.replace('cloudview', 'cloud').replace(/\?.*/,'') + '">'+node.title+'</a>');
 
 
                 }
