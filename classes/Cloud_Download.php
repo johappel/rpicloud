@@ -9,6 +9,25 @@ class Cloud_Download {
 		ini_set('display_errors', 1);
 		error_reporting(E_ALL);
 
+		if($transkey == 'temp'){
+			global $wp_version;
+			$url = base64_decode($file);
+			$args = array(
+				'user-agent'  => 'rpi-virtuell/' . $wp_version . '; ' . home_url(),
+			);
+			$response = wp_remote_get( $url, $args );
+			$headers = wp_remote_retrieve_headers($response);
+			$ct = $headers['content-type'];
+
+			if( is_array($response) ) {
+
+				header("Content-type:$ct");
+				header("Content-Disposition:inline;filename='file.pdf'");
+				print $response['body'];
+				die();
+			}
+		}
+
 		# get path
 		$cfg = Cloud_Config::get_Instance($transkey);
 
@@ -116,6 +135,10 @@ class Cloud_Download {
 		fclose($temp);
 		die();
 
+	}
+
+	public static function getfile($props){
+		return '';
 	}
 
 }

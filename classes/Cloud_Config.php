@@ -6,18 +6,20 @@ use Sabre\DAV\Client;
 class Cloud_Config {
 
 	protected $transkey;
+	protected $tree;
+	protected $client;
 	protected $baseUri                  ='https://cloud.rpi-virtuell.de/public.php/webdav';
 	protected $userName                 = '';
 	protected $password                 = '';
 	protected $mod_rewrite_is_enabled   = true;
 	protected $uri_prefix               = '/public.php/webdav/';
-	protected $publicUri                = 'https://cloud.rpi-virtuell.de/s/';
+	protected $publicUri                = 'https://cloud.rpi-virtuell.de/index.php/s/';
 	protected $allowedExtensions         = 'jpg,png,gif';
 	protected $force_login_to_upload     = false;
 	protected $allow_del                 = false;
 	protected $allow_viewer              = false;
 	protected $allow_upload              = false;
-	protected $allow_createdir              = false;
+	protected $allow_createdir           = false;
 	protected $dir                       = "/";
 
 
@@ -55,7 +57,7 @@ class Cloud_Config {
 		if(strpos($url, '/s/')>0){
 
 			//public shared
-			$this->set_publicUri($u['scheme'].'://'.$u['host'].'/s/');
+			$this->set_publicUri($u['scheme'].'://'.$u['host'].'/index.php/s/');
 			$this->set_uriPrefix('/public.php/webdav/');
 			$this->set_baseUri($u['scheme'].'://'.$u['host'].'/public.php/webdav');
 			$userName = substr( strrchr($u['path'],'/'), 1);
@@ -107,6 +109,13 @@ class Cloud_Config {
 	}
 	public function get_transkey(){
 		return $this->transkey;
+	}
+	public function get_tree(){
+
+		if(!$this->tree){
+			$this->check_url();
+		}
+		return $this->tree;
 	}
 	public function is_mod_rewrite_is_enabled(){
 		return $this->mod_rewrite_is_enabled;
@@ -200,7 +209,36 @@ class Cloud_Config {
 	}
 
 	public function get_client(){
-		return new Client($this->client_settings());
+		if(!$this->client){
+			$this->client = new Client($this->client_settings());
+		}
+		return $this->client;
+	}
+	public function check_url($start_dir = '/'){
+
+		$start_dir = Sabre\HTTP\encodePath($start_dir);
+
+
+		$this->client = new Client($this->client_settings());
+		try{
+			// Get folder content
+			$this->tree = $this->client->propFind($start_dir, array(
+				'{DAV:}displayname',
+				'{DAV:}getcontentlength',
+				'{DAV:}getlastmodified',
+				'{DAV:}getcontenttype',
+			), 10);
+		}catch (Exception $e){
+			return $e;
+		}
+		var_dump($this->tree);
+
+
+		if(count($this->tree)==1 && !isset($this->tree["{DAV:}getcontenttype"])){
+			return array('fileshare',$this->tree["{DAV:}getcontenttype"][0]);
+		}else{
+			return $this->tree;
+		}
 	}
 	protected function restore_from_options($key){
 

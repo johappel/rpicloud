@@ -23,7 +23,7 @@ if(empty(str_replace(':','',$url))){
 	if(isset($params[1])){
 		$passwd = $params[1];
 	}
-	$url = $u['scheme'].'://'.$u['host'].'/s/'.$usr;
+	$url = $u['scheme'].'://'.$u['host'].'/index.php/s/'.$usr;
 
 	$html = do_shortcode('[rpicloud dir="/" upload="false" url="'.$url.'" password="'.$passwd.'" dir="'.$dir.'"]');
 

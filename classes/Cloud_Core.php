@@ -161,18 +161,11 @@ Class Cloud_Core{
 
 		}
 
+//		$txt_header = $atts['header-label'];
+//		$txt_folder = $atts['folder-label'];
+//		$txt_placeholder = $atts['folder-placeholder'];
+//		$txt_confirm_delete = $atts['confirm_delete'];
 
-		$txt_header = $atts['header-label'];
-		$txt_folder = $atts['folder-label'];
-		$txt_placeholder = $atts['folder-placeholder'];
-		$txt_confirm_delete = $atts['confirm_delete'];
-
-		//save the shortcode to options
-		$option_key = self::add_key_to_postmeta($atts, $post);
-
-		//set the sabre nextcloud client
-		$option_value = serialize($atts);
-		$client = new Cloud_Client($option_key, $option_value);
 
 		// sanitize dirs
 		$dir_arr = explode('/', $atts['dir']);
@@ -190,6 +183,21 @@ Class Cloud_Core{
 			$start_dir = '/';
 		}
 
+		//save the shortcode to options
+		$option_value = serialize($atts);
+		$option_key = self::add_key_to_postmeta($atts, $post);
+
+		//check
+
+		//set the sabre nextcloud client
+		$client = new Cloud_Client($option_key, $option_value);
+		$foldertree = $client->get_folder_tree($start_dir);
+
+		if(isset($foldertree['file'])){
+
+			return $client->get_file($atts['url'], $foldertree['props'],$atts);
+
+		}
 
 		//now let's generate the output
 
@@ -199,6 +207,8 @@ Class Cloud_Core{
 			'tree_id'=>$tree_id,
 			'post_id'=> $post->ID
 		);
+
+		//$filecontent = $client->get_folder_tree($start_dir);
 
 		// rpicloud file tree container
 		$html  = '<div id="'.$tree_id.'-container" class="rpicloud rpicloud-container rpicloud-'.$tree_id.'">';
@@ -234,7 +244,7 @@ Class Cloud_Core{
 
 		//build file tree section with nexcloud client
 		$html .= '<div id="'.$tree_id.'" class="tree">';
-		$html .= $client->get_folder_tree($start_dir);
+		$html .= $foldertree;
 		$html .= '</div>'; //end file tree
 		$html .= '</div>'; //end rpicloud file tree container
 
@@ -251,25 +261,25 @@ Class Cloud_Core{
 		$url = $atts['url'].'?'.$post->ID.'='.$post->nc;
 		$value = serialize($atts);
 
-		$option = unserialize(Cloud_Config::get_postmeta('rpicloud'));
+		$cfg = unserialize(Cloud_Config::get_postmeta('rpicloud'));
 
-		if(isset($option[$url])){
+		if(isset($cfg[$url])){
 			//update?
-			if($option[$url][1]!=$value){
+			if($cfg[$url][1]!=$value){
 				//yes
-				$key = $option[$url][0];
-				$option[$url] = array($key, $value);
-				Cloud_Config::update_postmeta('rpicloud', $option);
+				$key = $cfg[$url][0];
+				$cfg[$url] = array($key, $value);
+				Cloud_Config::update_postmeta('rpicloud', $cfg);
 				set_transient($key,$value);
 			}else{
 				//no
-				$key = $option[$url][0];
+				$key = $cfg[$url][0];
 			}
 		}else{
 			//insert new
 			$key = Cloud_Helper::struuid();
-			$option[$url] = array($key, $value);
-			Cloud_Config::update_postmeta('rpicloud', serialize($option));
+			$cfg[$url] = array($key, $value);
+			Cloud_Config::update_postmeta('rpicloud', serialize($cfg));
 			set_transient($key,$value);
 		}
 
