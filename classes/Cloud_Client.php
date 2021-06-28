@@ -18,6 +18,11 @@ class Cloud_Client {
 	function get_file($url , $props, $atts){
 
 		$ctype = $props['{DAV:}getcontenttype'];
+
+		if($atts['']){
+
+		}
+
 		if(strpos($ctype,'image/')===0){
 
 
@@ -30,35 +35,64 @@ class Cloud_Client {
 
 			$script = '<script> iFrameResize();</script>';
 
-			return '<div onclick="window.open(\''.$url.'\',\'_blank\')" style="cursor:pointer; width:500px; height:500px">'.$img.'</div>'.$script;
+			return '<div onclick="window.open(\''.$url.'\',\'_blank\')" style="cursor:pointer; width:500px; height:'.$atts['height'].'px">'.$img.'</div>'.$script;
 
-		}elseif(strpos($ctype,'video/')===0){
+		}elseif(strpos($ctype,'video/' && $atts['allow_viewer']=='true')===0){
 
 				$url .= '/download';
 
-				$html = '<video preload="metadata" width="100%" height="500" style="height: 100%; min-height: 500px" controls id="video" style="background-color: #444">
+				$html = '<video preload="metadata" width="100%" height="'.$atts['height'].'" controls id="video" style="background-color: #444">
                     <source  src="'.$url.'" type="'.$ctype.'">
                 </video>';
 
 				return $html;
 
-		}elseif(strpos($ctype,'audio/')===0){
+		}elseif(strpos($ctype,'audio/' && $atts['allow_viewer']=='true')===0){
 
 				$url .= '/download';
 
-				$html = '<audio preload="metadata" width="100%" height="500" style="height: 100%; min-height: 500px" controls id="video" style="background-color: #444">
+				$html = '<audio preload="metadata">
                     <source  src="'.$url.'" type="'.$ctype.'">
                 </audio>';
 
 				return $html;
-		}elseif($ctype == 'application/pdf'){
+		}elseif(strpos($ctype,'text/html')===0 && $atts['allow_viewer']=='true'){
+
+				$url .= '/download';
+
+				$html = '<iframe width="100%" height="'.$atts['height'].'" src="'.$url.'"></iframe>';
+
+				return $html;
+		}elseif($ctype == 'text/markdown' && $atts['allow_viewer']=='true'){
+
+			$url .= '/download';
+
+			$response = wp_remote_get( $url);
+
+			if( is_array($response) && isset($response['body'])) {
+
+				include_once Cloud_Core::$plugindir.'parsedown/Parsedown.php';
+
+				$content = $response['body'];
+				$Parsedown = new Parsedown();
+				$content =  $Parsedown->text($content);
+
+			}else{
+				$content = 'Inhalt kann nicht ermittelt werden';
+			}
+
+			$html = '<div class="markdown">'.$content.'</div><p class="nc-share-link"><a href="'.$url.'">Download</a></p>';
+			return $html;
+
+		}elseif($ctype == 'application/pdf' && $atts['allow_viewer']=='true'){
+
 
 			$url .= '/download';
 
 			$src = Cloud_Core::$shorturl .'/temp/'.base64_encode($url);
 
 			$html = '<!-- wp:pdfb/pdf-block {"showToolbar":true,"url":"'.$src.'"} -->'."\n";
-			$html .= '<div class="wp-block-pdfb-pdf-block" style="height:1000px"><iframe src="'.$src.'" width="100%" height="100%"></iframe></div>'."\n";
+			$html .= '<div class="wp-block-pdfb-pdf-block" style="height:'.$atts['height'].'px"><iframe src="'.$src.'" width="100%" height="100%"></iframe></div>'."\n";
 			$html .= '<!-- /wp:pdfb/pdf-block -->'."\n";
 			$html .= '<p><a href="'.$url.'">Download</a></p>';
 
@@ -81,12 +115,14 @@ class Cloud_Client {
 				'application/vnd.visio'
 
 			);
-			if(in_array($ctype,$officedocs)){
 
-				if(isset($_COOKIE['rpi_cloud_viewer']) || isset($_GET['rpi_cloud_viewer'])){
+			if(in_array($ctype,$officedocs) && $atts['allow_viewer']=='true'){
+
+
+				if((isset($_COOKIE['rpi_cloud_viewer']) || isset($_GET['rpi_cloud_viewer']))|| current_user_can('edit_post')){
 					$src = 'https://view.officeapps.live.com/op/embed.aspx?src='.$url;
-					setcookie('rpi_cloud_viewer',"1",time()+(60*60*24*30));
-					$html = '<iframe id="viewer" scrolling="none" frameborder="0" width="100%" height="500" class="fullscreen" src="'.$src.'"></iframe>';
+
+					$html = '<iframe id="viewer" scrolling="none" frameborder="0" width="100%" height="'.$atts['height'].'" class="fullscreen" src="'.$src.'"></iframe>';
 				}else{
 					$uri = $url.'?rpi_cloud_viewer=1' ;
 					$html =   '<div class="view" style="border:1px solid #ddd">';

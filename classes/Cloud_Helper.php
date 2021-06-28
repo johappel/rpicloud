@@ -149,7 +149,13 @@ class Cloud_Helper {
 				'name' => 'lazy-blocks',
 				'url' => 'https://downloads.wordpress.org/plugin/lazy-blocks.2.3.1.zip',
 				//'activate' => 'lazy-blocks/lazy-blocks.php',
-			)
+			),
+			array(
+				'name' => 'pdf-block',
+				'url' => 'https://downloads.wordpress.org/plugin/pdf-block.zip',
+				'activate' => 'pdf-block/plugin.php',
+			),
+
 		);
 
 

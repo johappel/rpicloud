@@ -16,6 +16,10 @@ Class Cloud_Core{
 
 		$action = get_query_var('rpi_action', false);
 
+		if(isset($_GET['rpi_cloud_viewer'])){
+			setcookie('rpi_cloud_viewer',"1",time()+(60*60*24*30),'/');
+		}
+
 		switch($action){
 			case'rpicloud_download';
 				$trans_key = get_query_var('rpicloud_key');
@@ -137,7 +141,8 @@ Class Cloud_Core{
 			'allow_viewer' => 'false',
 			'allowed_extensions' => 'jpg,jpeg,png',
 			'login-to-upload' => 'false',
-			'only-login' => 'false'
+			'only-login' => 'false',
+			'height' => '600'
 		),   $atts, 'rpicloud' );
 
 

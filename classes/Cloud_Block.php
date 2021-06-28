@@ -84,43 +84,54 @@ class Cloud_Block {
 
 		return $html;
 	}
-	function cloud_ahare_editor_output($output, $attributes){
+	function cloud_share_editor_output($output, $attributes){
 
 		$output = '[rpicloud dir="/" '.
 		          'url="' .$attributes['url'] . '"  '.
 		          'password="' .$attributes['password']. '" '.
 		          'allow_viewer="' .$attributes['allowviewer']. '" '.
+		          'height="' .$attributes['height']. '" '.
 		          ']';
 
 		return do_shortcode($output);
 
-
-		return $html;
 	}
 
+	function cloud_share_frontend_output($output, $attributes){
+		$output = '[rpicloud dir="/" '.
+			     'url="' .$attributes['url'] . '"  '.
+			     'password="' .$attributes['password']. '" '.
+			     'allow_viewer="' .$attributes['allowviewer']. '" '.
+			     'height="' .$attributes['height']. '" '.
+			     ']';
+
+		return $output;
+	}
 	function cloud_frontend_output($output, $attributes){
 		$output = '[rpicloud dir="/" '.
-		     'url="' .$attributes['url'] . '"  '.
-		     'password="' .$attributes['password']. '" '.
-		     'dir="' .$attributes['dir']. '" '.
-		     'upload="' .$attributes['allowupload']. '" '.
-		     'allow_createdir="' .$attributes['allowcreatedir']. '" '.
-		     'allow_delete="' .$attributes['allowdelete']. '" '.
-		     'allow_viewer="' .$attributes['allowviewer']. '" '.
-		     'login-to-upload="' .$attributes['onlyloggedin-upload']. '" '.
-		     'only-login="' .$attributes['onlyloggedin']. '" '.
-		     'allowed_extensions="' .$attributes['allowed_extensions']. '" '.
-		     ']';
+		          'url="' .$attributes['url'] . '"  '.
+		          'password="' .$attributes['password']. '" '.
+		          'dir="' .$attributes['dir']. '" '.
+		          'upload="' .$attributes['allowupload']. '" '.
+		          'allow_createdir="' .$attributes['allowcreatedir']. '" '.
+		          'allow_delete="' .$attributes['allowdelete']. '" '.
+		          'allow_viewer="' .$attributes['allowviewer']. '" '.
+		          'login-to-upload="' .$attributes['onlyloggedin-upload']. '" '.
+		          'only-login="' .$attributes['onlyloggedin']. '" '.
+		          'allowed_extensions="' .$attributes['allowed_extensions']. '" '.
+		          ']';
 
 		return $output;
 	}
 
+
 	function add_blocks(){
 
-		add_filter( 'lazyblock/nextcloud-tree/frontend_callback', array($this,'cloud_frontend_output'), 10, 2 );
 		add_filter( 'lazyblock/nextcloud-tree/editor_callback', array($this,'cloud_editor_output'), 10, 2 );
-		add_filter( 'lazyblock/nextcloud-share/frontend_callback', array($this,'cloud_frontend_output'), 10, 2 );
-		add_filter( 'lazyblock/nextcloud-share/editor_callback', array($this,'cloud_ahare_editor_output'), 10, 2 );
+		add_filter( 'lazyblock/nextcloud-share/editor_callback', array($this,'cloud_share_editor_output'), 10, 2 );
+
+		add_filter( 'lazyblock/nextcloud-tree/frontend_callback', array($this,'cloud_frontend_output'), 10, 2 );
+		add_filter( 'lazyblock/nextcloud-share/frontend_callback', array($this,'cloud_share_frontend_output'), 10, 2 );
 
 
 		lazyblocks()->add_block( array(
@@ -351,7 +362,7 @@ class Cloud_Block {
 		lazyblocks()->add_block( array(
 			'id' => 404,
 			'title' => 'Nextcloud Freigabe',
-			'icon' => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g><g><g><path d="M416,236h-40v-80c0-11.046-8.954-20-20-20h-80V96c0-11.046-8.954-20-20-20c-11.046,0-20,8.954-20,20v40h-80c-11.046,0-20,8.954-20,20v80H96c-11.046,0-20,8.954-20,20s8.954,20,20,20h40v80c0,11.046,8.954,20,20,20h80v40c0,11.046,8.954,20,20,20s20-8.954,20-20v-40h80c11.046,0,20-8.954,20-20v-80h40c11.046,0,20-8.954,20-20C436,244.954,427.046,236,416,236z M336,336H176V176h160V336z"/><path d="M452,0H60C26.916,0,0,26.916,0,60v392c0,33.084,26.916,60,60,60h392c33.084,0,60-26.916,60-60V60C512,26.916,485.084,0,452,0z M472,452c0,11.028-8.972,20-20,20H60c-11.028,0-20-8.972-20-20V60c0-11.028,8.972-20,20-20h392c11.028,0,20,8.972,20,20V452z"/></g></g></g></svg>',
+			'icon' => '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" height="24" width="24"><g><g><g><path d="M416,236h-40v-80c0-11.046-8.954-20-20-20h-80V96c0-11.046-8.954-20-20-20c-11.046,0-20,8.954-20,20v40h-80c-11.046,0-20,8.954-20,20v80H96c-11.046,0-20,8.954-20,20s8.954,20,20,20h40v80c0,11.046,8.954,20,20,20h80v40c0,11.046,8.954,20,20,20s20-8.954,20-20v-40h80c11.046,0,20-8.954,20-20v-80h40c11.046,0,20-8.954,20-20C436,244.954,427.046,236,416,236z M336,336H176V176h160V336z"/><path d="M452,0H60C26.916,0,0,26.916,0,60v392c0,33.084,26.916,60,60,60h392c33.084,0,60-26.916,60-60V60C512,26.916,485.084,0,452,0z M472,452c0,11.028-8.972,20-20,20H60c-11.028,0-20-8.972-20-20V60c0-11.028,8.972-20,20-20h392c11.028,0,20,8.972,20,20V452z"/></g></g></g></svg>',
 			'keywords' => array(
 				0 => 'Netxtcloud',
 				1 => 'Fileshare',
@@ -414,13 +425,12 @@ class Cloud_Block {
 					'placeholder' => '',
 					'characters_limit' => '',
 				),
-
 				'control_b4a7254d4g' => array(
 					'type' => 'toggle',
 					'name' => 'allowviewer',
 					'default' => '',
-					'label' => 'Office Viewer',
-					'help' => 'Office Dateien werden über den MS Office365 Viewer im Browser nach Zustimmung zur Datenschutzerklärung angezeigt.',
+					'label' => 'Viewer',
+					'help' => '',
 					'child_of' => '',
 					'placement' => 'inspector',
 					'width' => '100',
@@ -429,7 +439,26 @@ class Cloud_Block {
 					'save_in_meta_name' => '',
 					'required' => 'false',
 					'checked' => 'false',
-					'alongside_text' => 'MS Office Viewer verwenden',
+					'alongside_text' => 'Dokumente einbetten',
+					'placeholder' => '',
+					'characters_limit' => '',
+				),
+				'control_55c9114578s' => array(
+					'type' => 'range',
+					'name' => 'height',
+					'default' => '970',
+					'label' => 'Höhe',
+					'help' => '',
+					'child_of' => '',
+					'placement' => 'inspector',
+					'width' => '100',
+					'hide_if_not_selected' => 'false',
+					'save_in_meta' => 'false',
+					'save_in_meta_name' => '',
+					'required' => 'false',
+					'min' => '150',
+					'max' => '1200',
+					'step' => '10',
 					'placeholder' => '',
 					'characters_limit' => '',
 				),
