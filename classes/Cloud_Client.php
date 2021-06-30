@@ -31,17 +31,17 @@ class Cloud_Client {
 				$w = $size[0];
 				$h = $size[1];
 			}
-			$img = "<img src=\"{$url}/download\" width=\"$w\" height=\"$h\" style=\"display: block; max-width:{$w}px; max-height:{$h}px; width: 100%; height: auto;\">";
+			$img = "<img src=\"{$url}/download\" width=\"$w\" height=\"$h\" style=\"display: block; width:auto; height:{$atts['height']}px;\">";
 
-			$script = '<script> iFrameResize();</script>';
+			//$script = '<script> iFrameResize();</script>';
 
-			return '<div onclick="window.open(\''.$url.'\',\'_blank\')" style="cursor:pointer; width:500px; height:'.$atts['height'].'px">'.$img.'</div>'.$script;
+			return '<div class="fileshare" style="width:100%; height:'.$atts['height'].'px;"><p>'.$img.'<br><a href="'.$url.'/download">Download</a></p></div>';
 
 		}elseif(strpos($ctype,'video/' && $atts['allow_viewer']=='true')===0){
 
 				$url .= '/download';
 
-				$html = '<video preload="metadata" width="100%" height="'.$atts['height'].'" controls id="video" style="background-color: #444">
+				$html = '<video preload="metadata" class="class="fileshare" width="100%" height="'.$atts['height'].'" controls id="video" style="background-color: #444">
                     <source  src="'.$url.'" type="'.$ctype.'">
                 </video>';
 
@@ -60,7 +60,7 @@ class Cloud_Client {
 
 				$url .= '/download';
 
-				$html = '<iframe width="100%" height="'.$atts['height'].'" src="'.$url.'"></iframe>';
+				$html = '<iframe class="fileshare"  width="100%" height="'.$atts['height'].'" src="'.$url.'"></iframe>';
 
 				return $html;
 		}elseif($ctype == 'text/markdown' && $atts['allow_viewer']=='true'){
@@ -81,7 +81,7 @@ class Cloud_Client {
 				$content = 'Inhalt kann nicht ermittelt werden';
 			}
 
-			$html = '<div class="markdown">'.$content.'</div><p class="nc-share-link"><a href="'.$url.'">Download</a></p>';
+			$html = '<div class="markdown fileshare">'.$content.'</div><p class="nc-share-link"><a href="'.$url.'">Download</a></p>';
 			return $html;
 
 		}elseif($ctype == 'application/pdf' && $atts['allow_viewer']=='true'){
@@ -170,7 +170,7 @@ class Cloud_Client {
 
 		}catch (Exception $e){
 			if($e->getCode()){
-				return '<div class="rpicloud-wrapper">Die Freigabe Link für deinen Cloud-Ordner ist ungültig oder das Passwort ist falsch</div>';
+				return '<div class="rpicloud-wrapper">Bitte gibt rechts bei den Block Einstellungen eine gültige Freigabe Url und ggf. ein Passwort ein</div>';
 			}
 			return('<div class="rpicloud-wrapper">Fehler ' . $e->getCode() . ' ist aufgetreten: '. $e->getMessage() . '</div>');
 		}
