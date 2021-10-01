@@ -153,28 +153,30 @@ class Cloud_Upload {
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
 		}
 
-		//$files = array();
+		$cfg = new Cloud_Config($_POST['rpicloud_key']);
 
 		$overrides = array( 'action' => 'wp_handle_upload' );
 
-		$file = $_FILES['rpicld_file'];
+		if(! isset($_POST['newdir'])){
 
-		$movefile     = wp_handle_upload( $file,$overrides);
-		if(isset($movefile['error'])){
-			wp_die($movefile['error']);
-		}
+			$file = $_FILES['rpicld_file'];
 
-		$c = file_get_contents($movefile['file']);
+			$movefile     = wp_handle_upload( $file,$overrides);
+			if(isset($movefile['error'])){
+				wp_die($movefile['error']);
+			}
 
-		$cfg = new Cloud_Config($_POST['rpicloud_key']);
+			$c = file_get_contents($movefile['file']);
 
-		$file_type = wp_check_filetype( $_FILES['rpicld_file']['name'] );
-		$file_extension = $file_type['ext'];
 
-		// Check for valid file extension
+			$file_type = wp_check_filetype( $_FILES['rpicld_file']['name'] );
+			$file_extension = $file_type['ext'];
 
-		if (!$cfg->get_allowedExtensions() && ! in_array( $file_extension, $cfg->get_allowedExtensions() ) ) {
-			  wp_die( sprintf(  esc_html__( 'Ungültige Dateierweiterung, nur erlaubt: %s', 'rpicloud' ), implode( ', ', $cfg->get_allowedExtensions() ) ) );
+			// Check for valid file extension
+			if (!$cfg->get_allowedExtensions() && ! in_array( $file_extension, $cfg->get_allowedExtensions() ) ) {
+				wp_die( sprintf(  esc_html__( 'Ungültige Dateierweiterung, nur erlaubt: %s', 'rpicloud' ), implode( ', ', $cfg->get_allowedExtensions() ) ) );
+			}
+
 		}
 
 		$uploaddir = isset($_POST['dir'])? $_POST['startdir'] . $_POST['dir'] : $_POST['startdir'];

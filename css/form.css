@@ -249,3 +249,10 @@ a.cloud_del:hover {
 .rpicloud-log-wrapper li{
     font-size: 90%;
 }
+
+.wp-block-lazyblock-nextcloud-tree{
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+    margin-bottom:10px;
+}
