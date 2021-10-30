@@ -84,7 +84,7 @@ class Cloud_Client {
 			$html = '<div class="markdown fileshare">'.$content.'</div><p class="nc-share-link"><a href="'.$url.'">Download</a></p>';
 			return $html;
 
-		}elseif($ctype == 'application/pdf' && $atts['allow_viewer']=='true'){
+		}elseif(!wp_is_mobile() && $ctype == 'application/pdf' && $atts['allow_viewer']=='true'){
 
 
 			$url .= '/download';
