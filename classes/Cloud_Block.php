@@ -11,7 +11,8 @@
 class Cloud_Block {
 	function __construct(){
 		// Define path and URL to the LZB plugin.
-		define( 'LZB_PATH', WP_PLUGIN_DIR . '/lazy-blocks/' );
+		if(!defined('LZB_PATH'))
+			define( 'LZB_PATH', WP_PLUGIN_DIR . '/lazy-blocks/' );
 
 		if(!file_exists(LZB_PATH . 'lazy-blocks.php')){
 

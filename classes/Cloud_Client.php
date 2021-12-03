@@ -84,7 +84,7 @@ class Cloud_Client {
 			$html = '<div class="markdown fileshare">'.$content.'</div><p class="nc-share-link"><a href="'.$url.'">Download</a></p>';
 			return $html;
 
-		}elseif(!wp_is_mobile() && $ctype == 'application/pdf' && $atts['allow_viewer']=='true'){
+		}elseif($ctype == 'application/pdf' && $atts['allow_viewer']=='true' && !wp_is_mobile()){
 
 
 			$url .= '/download';
@@ -119,8 +119,15 @@ class Cloud_Client {
 			if(in_array($ctype,$officedocs) && $atts['allow_viewer']=='true'){
 
 
+
 				if((isset($_COOKIE['rpi_cloud_viewer']) || isset($_GET['rpi_cloud_viewer']))|| current_user_can('edit_post')){
-					$src = 'https://view.officeapps.live.com/op/embed.aspx?src='.$url;
+					
+					//cache max 1 hour
+					$date = new DateTime(); // Defaults to now.
+					$date->setTime($date->format('G'), 0); // Current hour, 0 minute, [0 second]
+					
+					
+					$src = 'https://view.officeapps.live.com/op/embed.aspx?src='.$url.'?'.$date->getTimestamp();
 
 					$html = '<iframe id="viewer" scrolling="none" frameborder="0" width="100%" height="'.$atts['height'].'" class="fullscreen" src="'.$src.'"></iframe>';
 				}else{
