@@ -61,6 +61,7 @@ Class Cloud_Core{
 		//wp_enqueue_script('jquery-extra', self::$pluginurl.'js/jquery-3.6.0.min.js',null,'3.6.0',false);
 		wp_enqueue_style('fancytree_style', self::$pluginurl.'fancytree/skin-win8/ui.fancytree.min.css');
 		wp_enqueue_style('cloud_style', self::$pluginurl.'css/form.css');
+		wp_enqueue_style('admin_style', self::$pluginurl.'css/admin.css');
 		wp_enqueue_script('fancytree', self::$pluginurl.'fancytree/jquery.fancytree-all-deps.js',null,null,true);
 		wp_enqueue_script('cloud', self::$pluginurl.'js/cloud.js',null,false,true);
 		wp_enqueue_script('cloudframe', self::$pluginurl.'js/cloudframe.js',null,null,true);

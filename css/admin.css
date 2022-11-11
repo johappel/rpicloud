@@ -1,3 +1,4 @@
 .lazyblock .lzb-content-title {
-    display: none;
+    display: none!important;
+    max-width: 24px;
 }
